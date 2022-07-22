@@ -1,7 +1,7 @@
 <template>
   <div class="xl:pl-5 xl:py-5 flex h-screen">
     <DarkModeSwitcher />
-    <MainColorSwitcher />
+    <!-- <MainColorSwitcher /> -->
     <!-- BEGIN: Side Menu -->
     <nav
       class="side-nav"
@@ -26,14 +26,39 @@
           <a
             href="#"
             @click="setSimpleMenu"
-            class="side-nav__header__toggler hidden xl:block ml-auto text-primary dark:text-slate-500 text-opacity-70 hover:text-opacity-100 transition-all duration-300 ease-in-out pr-5"
+            class="
+              side-nav__header__toggler
+              hidden
+              xl:block
+              ml-auto
+              text-primary
+              dark:text-slate-500
+              text-opacity-70
+              hover:text-opacity-100
+              transition-all
+              duration-300
+              ease-in-out
+              pr-5
+            "
           >
             <ArrowLeftCircleIcon class="w-5 h-5" />
           </a>
           <a
             href="#"
             @click="setMobileMenu"
-            class="mobile-menu-toggler xl:hidden ml-auto text-primary dark:text-slate-500 text-opacity-70 hover:text-opacity-100 transition-all duration-300 ease-in-out pr-5"
+            class="
+              mobile-menu-toggler
+              xl:hidden
+              ml-auto
+              text-primary
+              dark:text-slate-500
+              text-opacity-70
+              hover:text-opacity-100
+              transition-all
+              duration-300
+              ease-in-out
+              pr-5
+            "
           >
             <XCircleIcon class="w-5 h-5" />
           </a>
