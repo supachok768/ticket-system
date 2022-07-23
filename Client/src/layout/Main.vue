@@ -80,7 +80,10 @@
                 :href="
                   menu.subMenu
                     ? 'javascript:;'
-                    : router.resolve({ name: menu.pageName }).path
+                    : router.resolve({
+                        name: menu.pageName,
+                        params: menu.params,
+                      }).path
                 "
                 class="side-menu"
                 :class="{
@@ -94,6 +97,14 @@
                 </div>
                 <div class="side-menu__title">
                   {{ menu.title }}
+                  <!-- {{
+                    menu.subMenu
+                      ? "javascript:;"
+                      : router.resolve({
+                          name: menu.pageName,
+                          params: menu.params,
+                        }).href
+                  }} -->
                   <div
                     v-if="menu.subMenu"
                     class="side-menu__sub-icon"
@@ -289,5 +300,6 @@ onMounted(() => {
   new SimpleBar(dom(".side-nav .scrollable")[0]);
   new SimpleBar(dom(".content")[0]);
   formattedMenu.value = $h.toRaw(mainMenu.value);
+  // console.log(formattedMenu.value);
 });
 </script>

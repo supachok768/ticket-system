@@ -49,9 +49,18 @@ const linkTo = (menu, router, event) => {
     menu.activeDropdown = !menu.activeDropdown;
   } else {
     event.preventDefault();
-    router.push({
-      name: menu.pageName,
-    });
+    if (!('params' in menu)) {
+      router.push({
+        name: menu.pageName,
+      });
+    } else {
+      router.push({
+        name: menu.pageName,
+        params: menu.params
+      });
+
+    }
+
   }
 };
 

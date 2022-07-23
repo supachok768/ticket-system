@@ -232,6 +232,7 @@
           <!-- </div> -->
         </div>
         <!-- END: General Report -->
+
         <!-- BEGIN: Sales Report -->
         <div class="col-span-12 md:col-span-8 lg:col-span-6 mt-7">
           <div class="intro-y block sm:flex items-center h-10">
@@ -294,6 +295,7 @@
           </div>
         </div>
         <!-- END: Sales Report -->
+
         <!-- BEGIN: Top Countries -->
         <div class="col-span-12 md:col-span-4 lg:col-span-3 mt-4 md:mt-7">
           <div class="intro-y flex items-center h-10">
@@ -475,6 +477,7 @@
           </div>
         </div>
         <!-- END: Top Countries -->
+
         <!-- BEGIN: Product Report -->
         <div class="col-span-12 sm:col-span-6 lg:col-span-3 mt-4 lg:mt-7">
           <div class="intro-y flex items-center h-10">
@@ -587,6 +590,7 @@
           </div>
         </div>
         <!-- END: Seller Report -->
+
         <!-- BEGIN: Transactions -->
         <div
           class="col-span-12 md:col-span-6 xl:col-span-4 2xl:col-span-4 mt-4"
