@@ -1,6 +1,6 @@
 <template>
   <div class="xl:pl-5 xl:py-5 flex h-screen">
-    <DarkModeSwitcher />
+    <!-- <DarkModeSwitcher /> -->
     <!-- <MainColorSwitcher /> -->
     <!-- BEGIN: Side Menu -->
     <nav

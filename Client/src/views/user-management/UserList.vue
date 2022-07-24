@@ -1,11 +1,9 @@
 <template>
   <h2 class="intro-y text-lg font-medium mt-10">Data List Layout</h2>
-  <div class="grid grid-cols-12 gap-6 mt-5">
-    <div
-      class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2"
-    >
-      <button class="btn btn-primary shadow-md mr-2">Add New Product</button>
-      <Dropdown>
+  <div
+    class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2"
+  >
+    <!-- <Dropdown>
         <DropdownToggle class="btn px-2 box">
           <span class="w-5 h-5 flex items-center justify-center">
             <PlusIcon class="w-4 h-4" />
@@ -24,162 +22,247 @@
             </DropdownItem>
           </DropdownContent>
         </DropdownMenu>
-      </Dropdown>
-      <div class="hidden md:block mx-auto text-slate-500">
-        Showing 1 to 10 of 150 entries
-      </div>
-      <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
-        <div class="w-56 relative text-slate-500">
-          <input
-            type="text"
-            class="form-control w-56 box pr-10"
-            placeholder="Search..."
-          />
-          <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" />
-        </div>
-      </div>
+      </Dropdown> -->
+    <div class="hidden md:block mx-auto text-slate-500">
+      Showing 1 to 10 of 150 entries
     </div>
-    <!-- BEGIN: Data List -->
-    <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
-      <table class="table table-report -mt-2">
-        <thead>
-          <tr>
-            <th class="whitespace-nowrap">IMAGES</th>
-            <th class="whitespace-nowrap">PRODUCT NAME</th>
-            <th class="text-center whitespace-nowrap">STOCK</th>
-            <th class="text-center whitespace-nowrap">STATUS</th>
-            <th class="text-center whitespace-nowrap">ACTIONS</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="(faker, fakerKey) in $_.take($f(), 9)"
-            :key="fakerKey"
-            class="intro-x"
-          >
-            <td class="w-40">
-              <div class="flex">
-                <div class="w-10 h-10 image-fit zoom-in">
-                  <Tippy
-                    tag="img"
-                    alt="Rocketman Tailwind HTML Admin Template"
-                    class="rounded-full"
-                    :src="faker.images[0]"
-                    :content="`Uploaded at ${faker.dates[0]}`"
-                  />
-                </div>
-                <div class="w-10 h-10 image-fit zoom-in -ml-5">
-                  <Tippy
-                    tag="img"
-                    alt="Rocketman Tailwind HTML Admin Template"
-                    class="rounded-full"
-                    :src="faker.images[1]"
-                    :content="`Uploaded at ${faker.dates[1]}`"
-                  />
-                </div>
-                <div class="w-10 h-10 image-fit zoom-in -ml-5">
-                  <Tippy
-                    tag="img"
-                    alt="Rocketman Tailwind HTML Admin Template"
-                    class="rounded-full"
-                    :src="faker.images[2]"
-                    :content="`Uploaded at ${faker.dates[2]}`"
-                  />
-                </div>
-              </div>
-            </td>
-            <td>
-              <a href="" class="font-medium whitespace-nowrap">{{
-                faker.products[0].name
-              }}</a>
-              <div class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-                {{ faker.products[0].category }}
-              </div>
-            </td>
-            <td class="text-center">{{ faker.stocks[0] }}</td>
-            <td class="w-40">
-              <div
-                class="flex items-center justify-center"
-                :class="{
-                  'text-success': faker.trueFalse[0],
-                  'text-danger': !faker.trueFalse[0],
-                }"
-              >
-                <CheckSquareIcon class="w-4 h-4 mr-2" />
-                {{ faker.trueFalse[0] ? "Active" : "Inactive" }}
-              </div>
-            </td>
-            <td class="table-report__action w-56">
-              <div class="flex justify-center items-center">
-                <a class="flex items-center mr-3" href="javascript:;">
-                  <CheckSquareIcon class="w-4 h-4 mr-1" /> Edit
-                </a>
-                <a
-                  class="flex items-center text-danger"
-                  href="javascript:;"
-                  @click="deleteConfirmationModal = true"
-                >
-                  <Trash2Icon class="w-4 h-4 mr-1" /> Delete
-                </a>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="w-full sm:w-auto mt-3 sm:mt-0 sm:ml-auto md:ml-0">
+      <button class="btn btn-primary shadow-md mr-2" @click="onNew">
+        Add New User
+      </button>
     </div>
-    <!-- END: Data List -->
-    <!-- BEGIN: Pagination -->
+  </div>
+
+  <!-- BEGIN: Filter -->
+  <div class="intro-y box p-5 mt-7 flex flex-col xl:flex-row gap-y-3">
     <div
-      class="intro-y col-span-12 flex flex-wrap sm:flex-row sm:flex-nowrap items-center"
+      class="
+        form-inline
+        flex-1 flex-col
+        xl:flex-row
+        items-start
+        xl:items-center
+        gap-y-2
+        xl:mr-6
+      "
     >
-      <nav class="w-full sm:w-auto sm:mr-auto">
-        <ul class="pagination">
-          <li class="page-item">
-            <a class="page-link" href="#">
-              <ChevronsLeftIcon class="w-4 h-4" />
-            </a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">
-              <ChevronLeftIcon class="w-4 h-4" />
-            </a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">...</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">1</a>
-          </li>
-          <li class="page-item active">
-            <a class="page-link" href="#">2</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">3</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">...</a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">
-              <ChevronRightIcon class="w-4 h-4" />
-            </a>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">
-              <ChevronsRightIcon class="w-4 h-4" />
-            </a>
-          </li>
-        </ul>
-      </nav>
-      <select class="w-20 form-select box mt-3 sm:mt-0">
-        <option>10</option>
-        <option>25</option>
-        <option>35</option>
-        <option>50</option>
+      <div class="w-full relative text-slate-500">
+        <input
+          type="text"
+          class="form-control w-full box pr-10"
+          placeholder="Search..."
+          v-model="search.name"
+        />
+        <SearchIcon class="w-4 h-4 absolute my-auto inset-y-0 mr-3 right-0" />
+      </div>
+    </div>
+    <div
+      class="
+        form-inline
+        flex-1 flex-col
+        xl:flex-row
+        items-start
+        xl:items-center
+        gap-y-2
+        xl:mr-6
+      "
+    >
+      <label for="crud-form-2" class="form-label">Category</label>
+      <TomSelect
+        id="crud-form-2"
+        v-model="search.type"
+        class="w-full flex-1"
+        multiple
+      >
+        <option
+          v-for="(faker, fakerKey) in $f()"
+          :key="fakerKey"
+          :value="faker.products[0].category"
+        >
+          {{ faker.products[0].category }}
+        </option>
+      </TomSelect>
+    </div>
+    <div
+      class="
+        form-inline
+        flex-1 flex-col
+        xl:flex-row
+        items-start
+        xl:items-center
+        gap-y-2
+        xl:mr-6
+      "
+    >
+      <label for="crud-form-1" class="form-label">Status</label>
+      <select
+        class="form-select w-full"
+        aria-label="Default select example"
+        v-model="search.status"
+      >
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
       </select>
     </div>
-    <!-- END: Pagination -->
+    <button class="btn btn-primary shadow-md" @click="onSearch">
+      <SearchIcon class="w-4 h-4 mr-2" /> Filter
+    </button>
   </div>
+  <!-- END: Filter -->
+  <!-- <div class="grid grid-cols-12 gap-6 mt-5"> -->
+  <!-- BEGIN: Data List -->
+  <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
+    <table class="table table-report -mt-2">
+      <thead>
+        <tr>
+          <th class="whitespace-nowrap">IMAGES</th>
+          <th class="whitespace-nowrap">NAME</th>
+          <th class="text-center whitespace-nowrap">TYPES</th>
+          <th class="text-center whitespace-nowrap">STATUS</th>
+          <th class="text-center whitespace-nowrap">ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(faker, fakerKey) in dataList"
+          :key="fakerKey"
+          class="intro-x"
+        >
+          <td class="w-40">
+            <div class="flex justify-center">
+              <div class="w-10 h-10 image-fit zoom-in">
+                <Tippy
+                  tag="img"
+                  alt="Rocketman Tailwind HTML Admin Template"
+                  class="rounded-full"
+                  :src="faker.images[0]"
+                  :content="`Uploaded at ${faker.dates[0]}`"
+                />
+              </div>
+            </div>
+          </td>
+          <td>
+            <a href="" class="font-medium whitespace-nowrap">{{
+              faker.products[0].name
+            }}</a>
+            <div class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
+              {{ faker.products[0].category }}
+            </div>
+          </td>
+          <td class="text-center">{{ faker.stocks[0] }}</td>
+          <td class="w-40">
+            <div
+              class="flex items-center justify-center"
+              :class="{
+                'text-success': faker.trueFalse[0],
+                'text-danger': !faker.trueFalse[0],
+              }"
+            >
+              <CheckSquareIcon class="w-4 h-4 mr-2" />
+              {{ faker.trueFalse[0] ? "Active" : "Inactive" }}
+            </div>
+          </td>
+          <td class="table-report__action w-56">
+            <div class="flex justify-center items-center">
+              <a
+                class="flex items-center mr-3"
+                href="javascript:;"
+                @click="onEdit(fakerKey)"
+              >
+                <CheckSquareIcon class="w-4 h-4 mr-1" />
+                Edit
+              </a>
+              <a
+                class="flex items-center text-danger"
+                href="javascript:;"
+                @click="onDeleteConfirmOpen(fakerKey)"
+              >
+                <Trash2Icon class="w-4 h-4 mr-1" /> Delete
+              </a>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- END: Data List -->
+  <!-- BEGIN: Pagination -->
+  <div
+    class="
+      intro-y
+      col-span-12
+      flex flex-wrap
+      sm:flex-row sm:flex-nowrap
+      items-center
+    "
+  >
+    <nav class="w-full sm:w-auto sm:mr-auto">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" href="javascript:;" @click="onPageNav(1)">
+            <ChevronsLeftIcon class="w-4 h-4" />
+          </a>
+        </li>
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="javascript:;"
+            @click="onPageNav(pagination.currentPage - 1)"
+          >
+            <ChevronLeftIcon class="w-4 h-4" />
+          </a>
+        </li>
+        <li class="page-item">
+          <span class="page-link">...</span>
+        </li>
+        <li
+          class="page-item"
+          v-for="(item, inx) in paginationNumber"
+          :key="inx"
+          :class="{ active: item.isActive }"
+        >
+          <a
+            class="page-link"
+            href="javascript:;"
+            @click="onPageNav(item.numberOfPage)"
+            >{{ item.numberOfPage }}</a
+          >
+        </li>
+        <li class="page-item">
+          <span class="page-link">...</span>
+        </li>
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="javascript:;"
+            @click="onPageNav(pagination.currentPage + 1)"
+          >
+            <ChevronRightIcon class="w-4 h-4" />
+          </a>
+        </li>
+        <li class="page-item">
+          <a
+            class="page-link"
+            href="javascript:;"
+            @click="onPageNav(pagination.numberOfPage)"
+          >
+            <ChevronsRightIcon class="w-4 h-4" />
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <select
+      v-model="pagination.sltPerPage"
+      class="w-20 form-select box mt-3 sm:mt-0"
+    >
+      <option :value="10">10</option>
+      <option :value="25">25</option>
+      <option :value="35">35</option>
+      <option :value="50">50</option>
+    </select>
+  </div>
+  <!-- END: Pagination -->
+  <!-- </div> -->
   <!-- BEGIN: Delete Confirmation Modal -->
   <Modal
     :show="deleteConfirmationModal"
@@ -191,7 +274,7 @@
         <div class="text-3xl mt-5">Are you sure?</div>
         <div class="text-slate-500 mt-2">
           Do you really want to delete these records? <br />This process cannot
-          be undone.
+          be undone. {{ currentSelectDeleteId }}
         </div>
       </div>
       <div class="px-5 pb-8 text-center">
@@ -209,8 +292,102 @@
   <!-- END: Delete Confirmation Modal -->
 </template>
 
-<script setup>
-import { ref } from "vue";
 
-const deleteConfirmationModal = ref(false);
+
+<script lang="ts">
+export default {
+  data() {
+    return {
+      deleteConfirmationModal: false,
+      currentSelectDeleteId: undefined,
+      dataList: this.$f(),
+      search: { name: "", type: [], status: "active" },
+      pagination: {
+        sltPerPage: 10,
+        currentPage: 5,
+        numberOfPage: 10,
+      },
+    };
+  },
+  methods: {
+    onDeleteConfirmOpen(id) {
+      this.currentSelectDeleteId = id;
+      this.deleteConfirmationModal = true;
+    },
+    onEdit(id) {
+      this.$router.push({
+        name: "user-detail",
+        params: {
+          mode: "edit",
+          id: id,
+        },
+      });
+    },
+    onNew() {
+      this.$router.push({
+        name: "user-detail",
+        params: {
+          mode: "new",
+        },
+      });
+    },
+    onSearch() {
+      console.log(this.inputSearch);
+    },
+    onPageNav(numOfPage) {
+      this.pagination.currentPage = numOfPage;
+    },
+  },
+  computed: {
+    paginationNumber() {
+      if (this.pagination.currentPage == 1) {
+        return [
+          {
+            numberOfPage: 1,
+            isActive: true,
+          },
+          {
+            numberOfPage: 2,
+            isActive: false,
+          },
+          {
+            numberOfPage: 3,
+            isActive: false,
+          },
+        ];
+      }
+      if (this.pagination.currentPage == this.pagination.numberOfPage) {
+        return [
+          {
+            numberOfPage: this.pagination.currentPage - 2,
+            isActive: false,
+          },
+          {
+            numberOfPage: this.pagination.currentPage - 1,
+            isActive: false,
+          },
+          {
+            numberOfPage: this.pagination.currentPage,
+            isActive: true,
+          },
+        ];
+      }
+
+      return [
+        {
+          numberOfPage: this.pagination.currentPage - 1,
+          isActive: false,
+        },
+        {
+          numberOfPage: this.pagination.currentPage,
+          isActive: true,
+        },
+        {
+          numberOfPage: this.pagination.currentPage + 1,
+          isActive: false,
+        },
+      ];
+    },
+  },
+};
 </script>

@@ -24,7 +24,11 @@ export const useMainMenuStore = defineStore("mainMenu", {
       },
       {
         icon: "",
-        pageName: "user-form",
+        pageName: "user-detail",
+        params: {
+          mode: "edit",
+          id: 0,
+        },
         title: "User Detail",
       },
       "TICKET MANAGEMENT",

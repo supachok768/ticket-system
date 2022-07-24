@@ -54,13 +54,13 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "/",
+        path: "",
         name: "user-list",
         component: UserList,
       },
       {
-        path: "detail",
-        name: "user-form",
+        path: ":mode/:id?",
+        name: "user-detail",
         component: UserDetail,
       },
     ],
@@ -70,7 +70,7 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "/",
+        path: "",
         name: "my-ticket",
         component: MyTicket,
       },
@@ -106,7 +106,7 @@ const routes = [
     component: MainLayout,
     children: [
       {
-        path: "/",
+        path: "",
         name: "task",
         component: Task,
       },
