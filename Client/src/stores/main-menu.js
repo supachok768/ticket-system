@@ -39,7 +39,10 @@ export const useMainMenuStore = defineStore("mainMenu", {
       },
       {
         icon: "",
-        params: { id: 'test' },
+        params: {
+          mode: "edit",
+          id: 0,
+        },
         pageName: "ticket-detail",
         title: "Ticket Detail",
       },
@@ -57,12 +60,6 @@ export const useMainMenuStore = defineStore("mainMenu", {
         icon: "",
         pageName: "my-issue",
         title: "My Issue",
-      },
-      {
-        icon: "",
-        params: { id: 'test' },
-        pageName: "issue-detail",
-        title: "Issue Detail",
       },
       "TASK",
       {
@@ -83,23 +80,6 @@ export const useMainMenuStore = defineStore("mainMenu", {
         title: "Task Conversation",
       },
       "EXAMPLES",
-      {
-        icon: "EditIcon",
-        pageName: "crud",
-        title: "Crud",
-        subMenu: [
-          {
-            icon: "",
-            pageName: "crud-data-list",
-            title: "Data List",
-          },
-          {
-            icon: "",
-            pageName: "crud-form",
-            title: "Form",
-          },
-        ],
-      },
       {
         icon: "UnlockIcon",
         pageName: "login",

@@ -4,7 +4,6 @@ import DashboardOverview1 from "../views/dashboard-overview-1/Main.vue";
 
 //TicketManagement
 import MyTicket from "../views/ticket-management/MyTicket.vue"
-import IssueDetail from "../views/ticket-management/IssueDetail.vue"
 import MyIssue from "../views/ticket-management/MyIssue.vue"
 import TicketBuy from "../views/ticket-management/TicketBuy.vue"
 import TicketList from "../views/ticket-management/TicketList.vue"
@@ -21,8 +20,6 @@ import Conversation from "../views/task/TaskConversation.vue"
 
 
 //Example View
-import CrudDataList from "../views/crud/crud-data-list/Main.vue";
-import CrudForm from "../views/crud/crud-form/Main.vue";
 import Login from "../views/auth/login/Main.vue";
 import Register from "../views/auth/register/Main.vue";
 import ErrorPage from "../views/error-page/Main.vue";
@@ -36,16 +33,6 @@ const routes = [
         path: "/",
         name: "dashboard-overview-1",
         component: DashboardOverview1,
-      },
-      {
-        path: "crud-data-list",
-        name: "crud-data-list",
-        component: CrudDataList,
-      },
-      {
-        path: "crud-form",
-        name: "crud-form",
-        component: CrudForm,
       },
     ],
   },
@@ -80,11 +67,6 @@ const routes = [
         component: MyIssue,
       },
       {
-        path: "issue/:id",
-        name: "issue-detail",
-        component: IssueDetail,
-      },
-      {
         path: "buy",
         name: "ticket-buy",
         component: TicketBuy,
@@ -95,7 +77,7 @@ const routes = [
         component: TicketList,
       },
       {
-        path: ":id",
+        path: ":mode/:id?",
         name: "ticket-detail",
         component: TicketDetail,
       },
@@ -111,7 +93,7 @@ const routes = [
         component: Task,
       },
       {
-        path: "/:type",
+        path: ":type",
         name: "task-type",
         component: Task,
       },
