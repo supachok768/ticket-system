@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -11,7 +11,127 @@ generator client {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
-  email    String @unique
-  password String
+  id                Int          @id @default(autoincrement())
+  email             String       @unique
+  password          String
+  firstName         String
+  lastName          String
+  isActive          Boolean      @default(true)
+  createAt          DateTime     @default(now())
+  updateAt          DateTime     @updatedAt
+  UserRole          UserRole[]
+  TicketUser        TicketUser[]
+  IssueRequestFrom  Issue[]      @relation(name: "IssueRequestFrom")
+  IssueAssignTo     Issue[]      @relation(name: "IssueAssignTo")
+  IssueChatSender   IssueChat[]  @relation(name: "IssueChatSender")
+  IssueChatReceiver IssueChat[]  @relation(name: "IssueChatReceiver")
+}
+
+model UserRole {
+  id       Int      @id @default(autoincrement())
+  user     User     @relation(fields: [userId], references: [id])
+  role     Role     @relation(fields: [roleId], references: [id])
+  userId   Int
+  roleId   Int
+  isActive Boolean  @default(true)
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+model Role {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  description String
+  isActive    Boolean    @default(true)
+  createAt    DateTime   @default(now())
+  updateAt    DateTime   @updatedAt
+  UserRole    UserRole[]
+}
+
+model TicketUser {
+  id         Int      @id @default(autoincrement())
+  amount     Int      @default(1)
+  totalPrice Decimal  @default(1)
+  user       User     @relation(fields: [userId], references: [id])
+  ticket     Ticket   @relation(fields: [ticketId], references: [id])
+  userId     Int
+  ticketId   Int
+  isActive   Boolean  @default(true)
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
+}
+
+model Ticket {
+  id                Int           @id @default(autoincrement())
+  name              String        @unique
+  price             Decimal       @default(0)
+  amountLimitPerDay Int           @default(0)
+  minimumBuy        Int           @default(0)
+  isActive          Boolean       @default(true)
+  createAt          DateTime      @default(now())
+  updateAt          DateTime      @updatedAt
+  TicketUser        TicketUser[]
+  TicketIssue       TicketIssue[]
+}
+
+model TicketIssue {
+  id       Int      @id @default(autoincrement())
+  ticket   Ticket   @relation(fields: [ticketId], references: [id])
+  issue    Issue    @relation(fields: [issueId], references: [id])
+  ticketId Int
+  issueId  Int
+  isActive Boolean  @default(true)
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+}
+
+model Issue {
+  id                     Int                      @id @default(autoincrement())
+  subject                String
+  description            Decimal                  @default(0)
+  requestFrom            User                     @relation(name: "IssueRequestFrom", fields: [requestFromId], references: [id])
+  assignTo               User                     @relation(name: "IssueAssignTo", fields: [assignToId], references: [id])
+  requestFromId          Int
+  assignToId             Int
+  isActive               Boolean                  @default(true)
+  createAt               DateTime                 @default(now())
+  updateAt               DateTime                 @updatedAt
+  TicketIssue            TicketIssue[]
+  IssueChat              IssueChat[]
+  IssueStatusTransaction IssueStatusTransaction[]
+}
+
+model IssueChat {
+  id         Int      @id @default(autoincrement())
+  issue      Issue    @relation(fields: [issueId], references: [id])
+  sender     User     @relation(name: "IssueChatSender", fields: [senderId], references: [id])
+  receiver   User     @relation(name: "IssueChatReceiver", fields: [receiverId], references: [id])
+  massage    String
+  issueId    Int
+  senderId   Int
+  receiverId Int
+  isActive   Boolean  @default(true)
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
+}
+
+model IssueStatusTransaction {
+  id            Int         @id @default(autoincrement())
+  issue         Issue       @relation(fields: [issueId], references: [id])
+  issueStatus   IssueStatus @relation(fields: [issueStatusId], references: [id])
+  isActive      Boolean     @default(true)
+  createAt      DateTime    @default(now())
+  updateAt      DateTime    @updatedAt
+  issueId       Int
+  issueStatusId Int
+}
+
+model IssueStatus {
+  id                     Int                      @id @default(autoincrement())
+  name                   String
+  description            String
+  isActive               Boolean                  @default(true)
+  createAt               DateTime                 @default(now())
+  updateAt               DateTime                 @updatedAt
+  IssueStatusTransaction IssueStatusTransaction[]
 }
