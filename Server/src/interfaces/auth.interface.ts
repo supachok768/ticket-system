@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { User } from '@prisma/client';
 
 export interface DataStoredInToken {
-  id: number;
+  _sub: number;
 }
 
 export interface TokenData {

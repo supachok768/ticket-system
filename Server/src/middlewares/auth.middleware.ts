@@ -12,7 +12,7 @@ const authMiddleware = async (req: RequestWithUser, res: Response, next: NextFun
     if (Authorization) {
       const secretKey: string = SECRET_KEY;
       const verificationResponse = (await verify(Authorization, secretKey)) as DataStoredInToken;
-      const userId = verificationResponse.id;
+      const userId = verificationResponse._sub;
 
       const users = new PrismaClient().user;
       const findUser = await users.findUnique({ where: { id: Number(userId) } });

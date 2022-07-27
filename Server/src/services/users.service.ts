@@ -8,7 +8,7 @@ class UserService {
   public users = new PrismaClient().user;
 
   public async findAllUser(): Promise<User[]> {
-    const allUser: User[] = await this.users.findMany();
+    const allUser: User[] = await this.users.findMany({include:{UserRole:true}});
     return allUser;
   }
 
