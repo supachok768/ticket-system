@@ -88,7 +88,7 @@ model TicketIssue {
 model Issue {
   id                     Int                      @id @default(autoincrement())
   subject                String
-  description            Decimal                  @default(0)
+  description            String                   @default("")
   RequestFrom            User                     @relation(name: "IssueRequestFrom", fields: [requestFromId], references: [id])
   AssignTo               User                     @relation(name: "IssueAssignTo", fields: [assignToId], references: [id])
   requestFromId          Int
@@ -119,11 +119,11 @@ model IssueStatusTransaction {
   id            Int         @id @default(autoincrement())
   Issue         Issue       @relation(fields: [issueId], references: [id])
   IssueStatus   IssueStatus @relation(fields: [issueStatusId], references: [id])
+  issueId       Int
+  issueStatusId Int
   isActive      Boolean     @default(true)
   createAt      DateTime    @default(now())
   updateAt      DateTime    @updatedAt
-  issueId       Int
-  issueStatusId Int
 }
 
 model IssueStatus {
