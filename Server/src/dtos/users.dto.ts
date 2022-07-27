@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsBoolean, IsOptional } from 'class-validator';
+import { IsEmail, IsString, IsBoolean, IsOptional, IsArray } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail()
@@ -16,6 +16,10 @@ export class CreateUserDto {
   @IsOptional()
   @IsBoolean()
   public isActive: boolean;
+
+  @IsArray()
+  @IsOptional()
+  public rolesActive: number[];
 }
 
 export class LoginUserDto {

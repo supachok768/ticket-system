@@ -29,8 +29,8 @@ model User {
 
 model UserRole {
   id       Int      @id @default(autoincrement())
-  user     User     @relation(fields: [userId], references: [id])
-  role     Role     @relation(fields: [roleId], references: [id])
+  User     User     @relation(fields: [userId], references: [id])
+  Role     Role     @relation(fields: [roleId], references: [id])
   userId   Int
   roleId   Int
   isActive Boolean  @default(true)
@@ -52,8 +52,8 @@ model TicketUser {
   id         Int      @id @default(autoincrement())
   amount     Int      @default(1)
   totalPrice Decimal  @default(1)
-  user       User     @relation(fields: [userId], references: [id])
-  ticket     Ticket   @relation(fields: [ticketId], references: [id])
+  User       User     @relation(fields: [userId], references: [id])
+  Ticket     Ticket   @relation(fields: [ticketId], references: [id])
   userId     Int
   ticketId   Int
   isActive   Boolean  @default(true)
@@ -76,8 +76,8 @@ model Ticket {
 
 model TicketIssue {
   id       Int      @id @default(autoincrement())
-  ticket   Ticket   @relation(fields: [ticketId], references: [id])
-  issue    Issue    @relation(fields: [issueId], references: [id])
+  Ticket   Ticket   @relation(fields: [ticketId], references: [id])
+  Issue    Issue    @relation(fields: [issueId], references: [id])
   ticketId Int
   issueId  Int
   isActive Boolean  @default(true)
@@ -89,8 +89,8 @@ model Issue {
   id                     Int                      @id @default(autoincrement())
   subject                String
   description            Decimal                  @default(0)
-  requestFrom            User                     @relation(name: "IssueRequestFrom", fields: [requestFromId], references: [id])
-  assignTo               User                     @relation(name: "IssueAssignTo", fields: [assignToId], references: [id])
+  RequestFrom            User                     @relation(name: "IssueRequestFrom", fields: [requestFromId], references: [id])
+  AssignTo               User                     @relation(name: "IssueAssignTo", fields: [assignToId], references: [id])
   requestFromId          Int
   assignToId             Int
   isActive               Boolean                  @default(true)
@@ -103,9 +103,9 @@ model Issue {
 
 model IssueChat {
   id         Int      @id @default(autoincrement())
-  issue      Issue    @relation(fields: [issueId], references: [id])
-  sender     User     @relation(name: "IssueChatSender", fields: [senderId], references: [id])
-  receiver   User     @relation(name: "IssueChatReceiver", fields: [receiverId], references: [id])
+  Issue      Issue    @relation(fields: [issueId], references: [id])
+  Sender     User     @relation(name: "IssueChatSender", fields: [senderId], references: [id])
+  Receiver   User     @relation(name: "IssueChatReceiver", fields: [receiverId], references: [id])
   massage    String
   issueId    Int
   senderId   Int
@@ -117,8 +117,8 @@ model IssueChat {
 
 model IssueStatusTransaction {
   id            Int         @id @default(autoincrement())
-  issue         Issue       @relation(fields: [issueId], references: [id])
-  issueStatus   IssueStatus @relation(fields: [issueStatusId], references: [id])
+  Issue         Issue       @relation(fields: [issueId], references: [id])
+  IssueStatus   IssueStatus @relation(fields: [issueStatusId], references: [id])
   isActive      Boolean     @default(true)
   createAt      DateTime    @default(now())
   updateAt      DateTime    @updatedAt
