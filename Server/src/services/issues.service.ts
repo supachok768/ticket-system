@@ -55,10 +55,40 @@ class IssueService {
     const Issue: Promise<Issue[]> = this.issue.findMany(option);
     return Issue;
   }
+
   public findIssueAssign(userId:number, perPage?: number, numPage?: number): Promise<Issue[]> {
     let option = {
       where: {
         assignToId: userId,
+      },
+      include: {
+        AssignTo:true,
+        RequestFrom:true,
+        TicketIssue: {
+          include: { TicketUser: true },
+        },
+        IssueStatusTransaction: {
+          include: { IssueStatus: true },
+        },
+      },
+    };
+
+    if (!Number.isNaN(perPage)) {
+      option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
+    }
+
+    const Issue: Promise<Issue[]> = this.issue.findMany(option);
+    return Issue;
+  }
+
+  public findIssueAssignToday(userId:number, perPage?: number, numPage?: number): Promise<Issue[]> {
+    const date = new Date();
+    let option = {
+      where: {
+        assignToId: userId,
+        createAt: {
+          gte: new Date(date.toISOString().substring(0, 10))
+        },
       },
       include: {
         AssignTo:true,

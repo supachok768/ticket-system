@@ -18,6 +18,7 @@ class IssueRoute implements Routes {
     this.router.get(`${this.path}`, this.issueController.getIssues);
     this.router.get(`${this.path}/assign/me`, authMiddleware, this.issueController.findIssueAssign);
     this.router.get(`${this.path}/request/me`, authMiddleware, this.issueController.findIssueRequest);
+    this.router.get(`${this.path}/assign/me/today`, authMiddleware, this.issueController.findIssueAssignToday);
     this.router.get(`${this.path}/pages/:perPage(\\d+)/:numPage(\\d+)`, this.issueController.getIssues);
     this.router.get(`${this.path}/:id(\\d+)`, this.issueController.getIssueById);
     this.router.post(`${this.path}`, authMiddleware, validationMiddleware(CreateIssueDto, 'body'), this.issueController.createIssue);
