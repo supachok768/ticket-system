@@ -11,7 +11,7 @@
   </div>
 
   <!-- BEGIN: Filter -->
-  <div class="intro-y box p-5 mt-7 flex flex-col xl:flex-row gap-y-3">
+  <!-- <div class="intro-y box p-5 mt-7 flex flex-col xl:flex-row gap-y-3">
     <div
       class="
         form-inline
@@ -57,7 +57,7 @@
     <button class="btn btn-primary shadow-md" @click="onSearch">
       <SearchIcon class="w-4 h-4 mr-2" /> Filter
     </button>
-  </div>
+  </div> -->
   <!-- END: Filter -->
   <!-- <div class="grid grid-cols-12 gap-6 mt-5"> -->
   <!-- BEGIN: Data List -->
@@ -66,7 +66,7 @@
       <thead>
         <tr>
           <th class="whitespace-nowrap">Subject</th>
-          <th class="text-center whitespace-nowrap">Ticket</th>
+          <!-- <th class="text-center whitespace-nowrap">Ticket</th> -->
           <th class="text-center whitespace-nowrap">Request from</th>
           <th class="text-center whitespace-nowrap">Assign To</th>
           <th class="text-center whitespace-nowrap">Datetime request</th>
@@ -75,33 +75,27 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(faker, fakerKey) in dataList"
-          :key="fakerKey"
-          class="intro-x"
-        >
-          <td>
-            <a href="" class="font-medium whitespace-nowrap">{{
-              faker.products[0].name
-            }}</a>
-            <div class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-              {{ faker.products[0].category }}
-            </div>
+        <tr v-for="(item, key) in dataList" :key="key" class="intro-x">
+          <td class="text-center">{{ item.subject }}</td>
+          <td class="text-center">
+            {{ item.RequestFrom.firstName + " " + item.RequestFrom.lastName }}
           </td>
-          <td class="text-center">{{ faker.stocks[0] }}</td>
-          <td class="text-center">{{ faker.stocks[0] }}</td>
-          <td class="text-center">{{ faker.stocks[0] }}</td>
-          <td class="text-center">{{ faker.stocks[0] }}</td>
+          <td class="text-center">
+            {{ item.AssignTo.firstName + " " + item.AssignTo.lastName }}
+          </td>
+          <td class="text-center">
+            {{ item.createAt }}
+          </td>
           <td class="w-40">
             <div
               class="flex items-center justify-center"
               :class="{
-                'text-success': faker.trueFalse[0],
-                'text-danger': !faker.trueFalse[0],
+                'text-success': item.isActive,
+                'text-danger': !item.isActive,
               }"
             >
               <CheckSquareIcon class="w-4 h-4 mr-2" />
-              {{ faker.trueFalse[0] ? "Active" : "Inactive" }}
+              {{ item.isActive ? "Active" : "Inactive" }}
             </div>
           </td>
           <td class="table-report__action w-56">
@@ -310,11 +304,13 @@
 
 
 <script lang="ts">
+import IssueService from "../../service/issue.service";
 export default {
   data() {
     return {
+      issueService: new IssueService(this.$axios),
       openIssueModal: false,
-      dataList: this.$f(),
+      dataList: [],
       search: { name: "", status: "active" },
       issueInformation: {
         subject: "",
@@ -330,7 +326,19 @@ export default {
       },
     };
   },
+  mounted() {
+    this.getTask();
+  },
   methods: {
+    getTask() {
+      this.issueService
+        .getIssueAssignMe()
+        .then((result) => {
+          console.log(result.data.data);
+          this.dataList = result.data.data;
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
     onChat(id) {
       this.$router.push({
         name: "task-conversation",

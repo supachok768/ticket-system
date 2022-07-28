@@ -11,41 +11,41 @@ export const useMainMenuStore = defineStore("mainMenu", {
         subMenu: [
           {
             icon: "",
-            pageName: "dashboard-overview-1",
-            title: "Overview 1",
+            pageName: "dashboard",
+            title: "Overview",
           },
         ],
       },
-      "USER MANAGEMENT",
-      {
-        icon: "",
-        pageName: "user-list",
-        title: "User",
-      },
-      {
-        icon: "",
-        pageName: "user-detail",
-        params: {
-          mode: "edit",
-          id: 0,
-        },
-        title: "User Detail",
-      },
+      // "USER MANAGEMENT",
+      // {
+      //   icon: "",
+      //   pageName: "user-list",
+      //   title: "User",
+      // },
+      // {
+      //   icon: "",
+      //   pageName: "user-detail",
+      //   params: {
+      //     mode: "edit",
+      //     id: 0,
+      //   },
+      //   title: "User Detail",
+      // },
       "TICKET MANAGEMENT",
-      {
-        icon: "",
-        pageName: "ticket-list",
-        title: "Ticket",
-      },
-      {
-        icon: "",
-        params: {
-          mode: "edit",
-          id: 0,
-        },
-        pageName: "ticket-detail",
-        title: "Ticket Detail",
-      },
+      // {
+      //   icon: "",
+      //   pageName: "ticket-list",
+      //   title: "Ticket",
+      // },
+      // {
+      //   icon: "",
+      //   params: {
+      //     mode: "edit",
+      //     id: 0,
+      //   },
+      //   pageName: "ticket-detail",
+      //   title: "Ticket Detail",
+      // },
       {
         icon: "",
         pageName: "my-ticket",
@@ -62,11 +62,11 @@ export const useMainMenuStore = defineStore("mainMenu", {
         title: "My Issue",
       },
       "TASK",
-      {
-        icon: "",
-        pageName: "task",
-        title: "Task",
-      },
+      // {
+      //   icon: "",
+      //   pageName: "task",
+      //   title: "Task",
+      // },
       {
         icon: "",
         pageName: "task-type",
@@ -79,22 +79,22 @@ export const useMainMenuStore = defineStore("mainMenu", {
         params: { id: 'test' },
         title: "Task Conversation",
       },
-      "EXAMPLES",
-      {
-        icon: "UnlockIcon",
-        pageName: "login",
-        title: "Login",
-      },
-      {
-        icon: "InboxIcon",
-        pageName: "register",
-        title: "Register",
-      },
-      {
-        icon: "HardDriveIcon",
-        pageName: "error-page",
-        title: "Error Page",
-      },
+      // "EXAMPLES",
+      // {
+      //   icon: "UnlockIcon",
+      //   pageName: "login",
+      //   title: "Login",
+      // },
+      // {
+      //   icon: "InboxIcon",
+      //   pageName: "register",
+      //   title: "Register",
+      // },
+      // {
+      //   icon: "HardDriveIcon",
+      //   pageName: "error-page",
+      //   title: "Error Page",
+      // },
     ],
   }),
 });

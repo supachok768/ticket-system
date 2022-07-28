@@ -11,8 +11,8 @@
     "
   >
     <div
-      v-for="(faker, fakerKey) in $f()"
-      :key="fakerKey"
+      v-for="(ticket, key) in ticketList"
+      :key="key"
       class="intro-y col-span-6 sm:col-span-4 md:col-span-3 2xl:col-span-2"
     >
       <div
@@ -40,29 +40,31 @@
           </div>
         </div>
         <p class="block font-medium mt-4 text-center truncate">
-          {{
-            faker.files[0].fileName.split("/")[
-              faker.files[0].fileName.split("/").length - 1
-            ]
-          }}
+          {{ ticket.name }}
         </p>
         <div class="text-slate-500 text-xs text-center mt-0.5">
-          Remaining amount : 10
+          Remaining amount : {{ ticket.amountLimitPerDay }}
         </div>
         <div class="text-slate-500 text-xs text-center mt-0.5">
-          Minimum buying : 2
+          Minimum buying : {{ ticket.minimumBuy }}
         </div>
         <div class="flex justify-center mt-3 text-center">
           <button class="btn btn-outline-primary font-small">
-            <MinusIcon class="w-3 h-3" />
+            <MinusIcon class="w-3 h-3" @click="changeBuyAmount(-1, ticket)" />
           </button>
-          <p class="p-2 mr-3 ml-3">0</p>
+          <p class="p-2 mr-3 ml-3">{{ ticket.buyAmount }}</p>
           <button class="btn btn-outline-primary font-small">
-            <PlusIcon class="w-3 h-3" />
+            <PlusIcon class="w-3 h-3" @click="changeBuyAmount(1, ticket)" />
           </button>
         </div>
         <div class="mt-3 text-center">
-          <button type="submit" class="btn btn-primary pr-10 pl-10">Buy</button>
+          <button
+            type="submit"
+            class="btn btn-primary pr-10 pl-10"
+            @click="buyTicket(ticket)"
+          >
+            Buy
+          </button>
         </div>
       </div>
     </div>
@@ -70,5 +72,49 @@
 </template>
 
 <script lang="ts">
-export default {};
+import TicketService from "../../service/ticket.service";
+
+export default {
+  data() {
+    return {
+      ticketService: undefined,
+      ticketList: [],
+    };
+  },
+  mounted() {
+    this.ticketService = new TicketService(this.$axios);
+
+    this.getTicket();
+  },
+  methods: {
+    getTicket() {
+      this.ticketService
+        .getTicket()
+        .then((result) => {
+          this.ticketList = result.data.data.map((x) => ({
+            ...x,
+            buyAmount: x.minimumBuy,
+          }));
+        })
+        .catch((err) => {});
+    },
+    buyTicket(item) {
+      this.ticketService
+        .buyTicket(item.id, item.name, item.buyAmount)
+        .then((result) => {
+          alert("Buy ticket success");
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
+    },
+    changeBuyAmount(amount, item) {
+      if (item.buyAmount + amount < item.minimumBuy) {
+        return;
+      }
+
+      item.buyAmount += amount;
+    },
+  },
+};
 </script>

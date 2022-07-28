@@ -12,6 +12,8 @@ class IssueService {
   public findIssue(perPage?: number, numPage?: number): Promise<Issue[]> {
     let option = {
       include: {
+        AssignTo:true,
+        RequestFrom:true,
         TicketIssue: {
           include: { TicketUser: true },
         },
@@ -35,6 +37,8 @@ class IssueService {
         requestFromId: userId,
       },
       include: {
+        AssignTo:true,
+        RequestFrom:true,
         TicketIssue: {
           include: { TicketUser: true },
         },
@@ -57,6 +61,8 @@ class IssueService {
         assignToId: userId,
       },
       include: {
+        AssignTo:true,
+        RequestFrom:true,
         TicketIssue: {
           include: { TicketUser: true },
         },
