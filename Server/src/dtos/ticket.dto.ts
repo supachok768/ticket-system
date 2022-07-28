@@ -17,3 +17,18 @@ export class CreateTicketDto {
   @IsBoolean()
   public isActive: boolean;
 }
+
+export class BuyTicketDto {
+  @IsInt()
+  public ticketId: number;
+  
+  @IsOptional()
+  @IsInt()
+  public userId: number;
+
+  @IsString()
+  public name: string;
+
+  @IsInt()
+  public amount: number;
+}

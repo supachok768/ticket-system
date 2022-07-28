@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { Ticket } from '@prisma/client';
-import { CreateTicketDto } from '@dtos/ticket.dto';
+import { Ticket, TicketUser } from '@prisma/client';
+import { BuyTicketDto, CreateTicketDto } from '@dtos/ticket.dto';
 import ticketService from '@services/tickets.service';
 
 class TicketController {
@@ -33,6 +33,19 @@ class TicketController {
       const createTicketData: Ticket = await this.ticketService.createTicket(ticketData);
 
       res.status(201).json({ data: createTicketData, message: 'created' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public buyTicket = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      let ticketData: BuyTicketDto = req.body;
+      const userId = Number(req.user['id']);
+      ticketData.userId = userId;
+      const createTicketUserData: TicketUser = await this.ticketService.buyTicket(ticketData);
+
+      res.status(201).json({ data: createTicketUserData, message: 'buy ticket' });
     } catch (error) {
       next(error);
     }
