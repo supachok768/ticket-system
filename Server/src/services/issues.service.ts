@@ -1,4 +1,4 @@
-import { PrismaClient, Issue, IssueStatus } from '@prisma/client';
+import { PrismaClient, Issue, IssueStatus, User } from '@prisma/client';
 import { CreateIssueDto, UpdateIssueStatusDto } from '@dtos/issue.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { isEmpty } from '@utils/util';
@@ -11,6 +11,51 @@ class IssueService {
 
   public findIssue(perPage?: number, numPage?: number): Promise<Issue[]> {
     let option = {
+      include: {
+        TicketIssue: {
+          include: { TicketUser: true },
+        },
+        IssueStatusTransaction: {
+          include: { IssueStatus: true },
+        },
+      },
+    };
+
+    if (!Number.isNaN(perPage)) {
+      option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
+    }
+
+    const Issue: Promise<Issue[]> = this.issue.findMany(option);
+    return Issue;
+  }
+
+  public findIssueRequest(userId:number, perPage?: number, numPage?: number): Promise<Issue[]> {
+    let option = {
+      where: {
+        requestFromId: userId,
+      },
+      include: {
+        TicketIssue: {
+          include: { TicketUser: true },
+        },
+        IssueStatusTransaction: {
+          include: { IssueStatus: true },
+        },
+      },
+    };
+
+    if (!Number.isNaN(perPage)) {
+      option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
+    }
+
+    const Issue: Promise<Issue[]> = this.issue.findMany(option);
+    return Issue;
+  }
+  public findIssueAssign(userId:number, perPage?: number, numPage?: number): Promise<Issue[]> {
+    let option = {
+      where: {
+        assignToId: userId,
+      },
       include: {
         TicketIssue: {
           include: { TicketUser: true },

@@ -15,6 +15,28 @@ class IssueController {
       next(error);
     }
   };
+  
+  public findIssueRequest = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userId = Number(req.user["id"]);
+      const findAllIssuesData: Issue[] = await this.issueService.findIssueRequest(userId,Number(req.params.perPage), Number(req.params.numPage));
+
+      res.status(200).json({ data: findAllIssuesData, message: 'findRequest' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public findIssueAssign = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userId = Number(req.user["id"]);
+      const findAllIssuesData: Issue[] = await this.issueService.findIssueAssign(userId,Number(req.params.perPage), Number(req.params.numPage));
+
+      res.status(200).json({ data: findAllIssuesData, message: 'findAssign' });
+    } catch (error) {
+      next(error);
+    }
+  };
 
   public getIssueById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
