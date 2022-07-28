@@ -49,16 +49,17 @@ model Role {
 }
 
 model TicketUser {
-  id         Int      @id @default(autoincrement())
-  amount     Int      @default(1)
-  totalPrice Decimal  @default(1)
-  User       User     @relation(fields: [userId], references: [id])
-  Ticket     Ticket   @relation(fields: [ticketId], references: [id])
-  userId     Int
-  ticketId   Int
-  isActive   Boolean  @default(true)
-  createAt   DateTime @default(now())
-  updateAt   DateTime @updatedAt
+  id          Int           @id @default(autoincrement())
+  amount      Int           @default(1)
+  totalPrice  Decimal       @default(1)
+  User        User          @relation(fields: [userId], references: [id])
+  Ticket      Ticket        @relation(fields: [ticketId], references: [id])
+  userId      Int
+  ticketId    Int
+  isActive    Boolean       @default(true)
+  createAt    DateTime      @default(now())
+  updateAt    DateTime      @updatedAt
+  TicketIssue TicketIssue[]
 }
 
 model Ticket {
@@ -71,18 +72,17 @@ model Ticket {
   createAt          DateTime      @default(now())
   updateAt          DateTime      @updatedAt
   TicketUser        TicketUser[]
-  TicketIssue       TicketIssue[]
 }
 
 model TicketIssue {
-  id       Int      @id @default(autoincrement())
-  Ticket   Ticket   @relation(fields: [ticketId], references: [id])
-  Issue    Issue    @relation(fields: [issueId], references: [id])
-  ticketId Int
-  issueId  Int
-  isActive Boolean  @default(true)
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
+  id           Int        @id @default(autoincrement())
+  TicketUser   TicketUser @relation(fields: [ticketUserId], references: [id])
+  Issue        Issue      @relation(fields: [issueId], references: [id])
+  ticketUserId Int
+  issueId      Int
+  isActive     Boolean    @default(true)
+  createAt     DateTime   @default(now())
+  updateAt     DateTime   @updatedAt
 }
 
 model Issue {

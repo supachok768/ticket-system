@@ -7,12 +7,13 @@ class IssueService {
   public issue = new PrismaClient().issue;
   public issueStatus = new PrismaClient().issueStatus;
   public users = new PrismaClient().user;
+  public ticketUser = new PrismaClient().ticketUser;
 
   public findIssue(perPage?: number, numPage?: number): Promise<Issue[]> {
     let option = {
       include: {
         TicketIssue: {
-          include: { Ticket: true },
+          include: { TicketUser: true },
         },
         IssueStatusTransaction: {
           include: { IssueStatus: true },
@@ -35,7 +36,7 @@ class IssueService {
       where: { id: issueId },
       include: {
         TicketIssue: {
-          include: { Ticket: true },
+          include: { TicketUser: true },
         },
         IssueStatusTransaction: {
           include: { IssueStatus: true },
@@ -52,19 +53,30 @@ class IssueService {
     const findStatusOpen: IssueStatus = await this.issueStatus.findFirst({ where: { id: issueData.issueStatusId } });
     delete issueData.issueStatusId;
 
+    const findTicketUser = await this.ticketUser.findUnique({
+      where: { id: issueData.ticketUserId },
+    });
+    if (!findTicketUser) throw new HttpException(409, 'user have no this ticket');
+    delete issueData.ticketUserId;
+
     const findAssignTo = await this.users.findUnique({
       where: { id: issueData.assignToId },
     });
-    if (!findAssignTo) throw new HttpException(409, "Assign is not user");
+    if (!findAssignTo) throw new HttpException(409, 'Assign is not user');
 
     const findRequestTo = await this.users.findUnique({
       where: { id: issueData.requestFromId },
     });
-    if (!findRequestTo) throw new HttpException(409, "requestor is not user");
+    if (!findRequestTo) throw new HttpException(409, 'requestor is not user');
 
     const createIssueData: Promise<Issue> = this.issue.create({
       data: {
         ...issueData,
+        TicketIssue: {
+          create: {
+            ticketUserId: findTicketUser.id,
+          },
+        },
         IssueStatusTransaction: {
           create: {
             issueStatusId: findStatusOpen.id,

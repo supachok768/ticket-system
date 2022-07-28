@@ -49,16 +49,18 @@ class TicketService {
     const findTicket: Ticket = await this.ticket.findUnique({ where: { id: ticketData.ticketId } });
     if (!findTicket) throw new HttpException(409, `You're name ${ticketData.name} not already exists`);
     if (ticketData.amount < findTicket.minimumBuy) throw new HttpException(400, `minimum buy is ${findTicket.minimumBuy}`);
-
+    const date = new Date();
     const buyToday = await this.ticketUser.findMany({
       where: {
         ticketId: ticketData.ticketId,
         createAt: {
-          gte: new Date(),
+          gte: new Date(date.toISOString().substring(0, 10))
         },
       },
     });
-    if (buyToday.length > findTicket.amountLimitPerDay) throw new HttpException(400, 'ticket is sold out!');
+    const sumBuyToday:number = buyToday.reduce((accumulator,curr)=>(accumulator + curr.amount),0)
+    console.log(buyToday)
+    if (sumBuyToday > findTicket.amountLimitPerDay) throw new HttpException(400, 'ticket is sold out!');
 
     const createTicketData: Promise<TicketUser> = this.ticketUser.create({
       data: {

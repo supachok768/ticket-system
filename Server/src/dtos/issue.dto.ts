@@ -15,6 +15,9 @@ export class CreateIssueDto {
   public assignToId: number;
 
   @IsInt()
+  public ticketUserId: number;
+
+  @IsInt()
   public issueStatusId: number;
 
   @IsOptional()
