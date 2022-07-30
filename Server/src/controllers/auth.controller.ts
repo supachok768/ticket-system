@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { User } from '@prisma/client';
-import { CreateUserDto,LoginUserDto } from '@dtos/users.dto';
+import { CreateUserDto, LoginUserDto } from '@dtos/users.dto';
 import { RequestWithUser } from '@interfaces/auth.interface';
 import AuthService from '@services/auth.service';
 
@@ -24,6 +24,17 @@ class AuthController {
       const { tokenData, findUser } = await this.authService.login(userData);
 
       res.status(200).json({ data: { user: findUser, token: tokenData }, message: 'login' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public refreshToken = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
+    try {
+      const userData: User = req.user;
+      const tokenData = await this.authService.refreshToken(userData);
+
+      res.status(200).json({ data: { token: tokenData }, message: 'verify and refresh token' });
     } catch (error) {
       next(error);
     }

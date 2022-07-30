@@ -36,6 +36,12 @@ class AuthService {
     return { tokenData, findUser };
   }
 
+  public async refreshToken(userData:User): Promise<TokenData>{
+    if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
+    const newToken = await this.createToken(userData);
+    return newToken;
+  }
+
   public async createToken(user: User): Promise<TokenData> {
     // const hash_id = await hash(user.id.toString(),HASH_SALT);
     const dataStoredInToken: DataStoredInToken = { _sub: user.id };
