@@ -49,40 +49,29 @@ model Role {
 }
 
 model TicketUser {
-  id          Int           @id @default(autoincrement())
-  amount      Int           @default(1)
-  totalPrice  Decimal       @default(1)
-  User        User          @relation(fields: [userId], references: [id])
-  Ticket      Ticket        @relation(fields: [ticketId], references: [id])
-  userId      Int
-  ticketId    Int
-  isActive    Boolean       @default(true)
-  createAt    DateTime      @default(now())
-  updateAt    DateTime      @updatedAt
-  TicketIssue TicketIssue[]
+  id         Int      @id @default(autoincrement())
+  amount     Int      @default(1)
+  totalPrice Decimal  @default(1)
+  User       User     @relation(fields: [userId], references: [id])
+  Ticket     Ticket   @relation(fields: [ticketId], references: [id])
+  userId     Int
+  ticketId   Int
+  isActive   Boolean  @default(true)
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
 }
 
 model Ticket {
-  id                Int           @id @default(autoincrement())
-  name              String        @unique
-  price             Decimal       @default(0)
-  amountLimitPerDay Int           @default(0)
-  minimumBuy        Int           @default(0)
-  isActive          Boolean       @default(true)
-  createAt          DateTime      @default(now())
-  updateAt          DateTime      @updatedAt
+  id                Int          @id @default(autoincrement())
+  name              String       @unique
+  price             Decimal      @default(0)
+  amountLimitPerDay Int          @default(0)
+  minimumBuy        Int          @default(0)
+  isActive          Boolean      @default(true)
+  createAt          DateTime     @default(now())
+  updateAt          DateTime     @updatedAt
   TicketUser        TicketUser[]
-}
-
-model TicketIssue {
-  id           Int        @id @default(autoincrement())
-  TicketUser   TicketUser @relation(fields: [ticketUserId], references: [id])
-  Issue        Issue      @relation(fields: [issueId], references: [id])
-  ticketUserId Int
-  issueId      Int
-  isActive     Boolean    @default(true)
-  createAt     DateTime   @default(now())
-  updateAt     DateTime   @updatedAt
+  Issue             Issue[]
 }
 
 model Issue {
@@ -91,12 +80,13 @@ model Issue {
   description            String                   @default("")
   RequestFrom            User                     @relation(name: "IssueRequestFrom", fields: [requestFromId], references: [id])
   AssignTo               User                     @relation(name: "IssueAssignTo", fields: [assignToId], references: [id])
+  Ticket                 Ticket                   @relation(fields: [ticketId], references: [id])
   requestFromId          Int
   assignToId             Int
+  ticketId               Int
   isActive               Boolean                  @default(true)
   createAt               DateTime                 @default(now())
   updateAt               DateTime                 @updatedAt
-  TicketIssue            TicketIssue[]
   IssueChat              IssueChat[]
   IssueStatusTransaction IssueStatusTransaction[]
 }

@@ -59,7 +59,6 @@ class TicketService {
       },
     });
     const sumBuyToday:number = buyToday.reduce((accumulator,curr)=>(accumulator + curr.amount),0)
-    console.log(buyToday)
     if (sumBuyToday > findTicket.amountLimitPerDay) throw new HttpException(400, 'ticket is sold out!');
 
     const createTicketData: Promise<TicketUser> = this.ticketUser.create({

@@ -8,15 +8,14 @@ class IssueService {
   public issueStatus = new PrismaClient().issueStatus;
   public users = new PrismaClient().user;
   public ticketUser = new PrismaClient().ticketUser;
+  public ticket = new PrismaClient().ticket;
 
   public findIssue(perPage?: number, numPage?: number): Promise<Issue[]> {
     let option = {
       include: {
         AssignTo:true,
         RequestFrom:true,
-        TicketIssue: {
-          include: { TicketUser: true },
-        },
+        Ticket: true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
         },
@@ -39,9 +38,7 @@ class IssueService {
       include: {
         AssignTo:true,
         RequestFrom:true,
-        TicketIssue: {
-          include: { TicketUser: true },
-        },
+        Ticket: true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
         },
@@ -64,9 +61,7 @@ class IssueService {
       include: {
         AssignTo:true,
         RequestFrom:true,
-        TicketIssue: {
-          include: { TicketUser: true },
-        },
+        Ticket: true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
         },
@@ -93,9 +88,7 @@ class IssueService {
       include: {
         AssignTo:true,
         RequestFrom:true,
-        TicketIssue: {
-          include: { TicketUser: true },
-        },
+        Ticket: true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
         },
@@ -116,9 +109,7 @@ class IssueService {
     const findIssue: Promise<Issue> = this.issue.findUnique({
       where: { id: issueId },
       include: {
-        TicketIssue: {
-          include: { TicketUser: true },
-        },
+        Ticket: true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
         },
@@ -134,11 +125,27 @@ class IssueService {
     const findStatusOpen: IssueStatus = await this.issueStatus.findFirst({ where: { id: issueData.issueStatusId } });
     delete issueData.issueStatusId;
 
-    const findTicketUser = await this.ticketUser.findUnique({
-      where: { id: issueData.ticketUserId },
+    const findTicket = await this.ticket.findUnique({
+      where: { id: issueData.ticketId },
     });
-    if (!findTicketUser) throw new HttpException(409, 'user have no this ticket');
-    delete issueData.ticketUserId;
+    if (!findTicket) throw new HttpException(409, 'user have no this ticket');
+    // delete issueData.ticketId;
+
+    const ticketUserHave = await this.ticketUser.findMany({
+      where: {
+        ticketId: issueData.ticketId,
+        userId: issueData.requestFromId,
+      },
+    });
+    const sumTicketUserHave:number = ticketUserHave.reduce((accumulator,curr)=>(accumulator + curr.amount),0)
+    const ticketUsed = await this.issue.findMany({
+      where:{
+        ticketId: issueData.ticketId,
+        requestFromId: issueData.requestFromId
+      }
+    })
+    const sumTicketUsed:number = ticketUsed.length
+    if (sumTicketUserHave <= sumTicketUsed) throw new HttpException(400, "You're not have more ticket");
 
     const findAssignTo = await this.users.findUnique({
       where: { id: issueData.assignToId },
@@ -153,11 +160,6 @@ class IssueService {
     const createIssueData: Promise<Issue> = this.issue.create({
       data: {
         ...issueData,
-        TicketIssue: {
-          create: {
-            ticketUserId: findTicketUser.id,
-          },
-        },
         IssueStatusTransaction: {
           create: {
             issueStatusId: findStatusOpen.id,
