@@ -7,10 +7,11 @@ import IssueRoute from './routes/issues.route';
 import IssueStatusRoute from './routes/issue_status.route';
 import validateEnv from '@utils/validateEnv';
 import SeedData from '@/prisma/seed';
+import TicketUserRoute from '@routes/ticket_user.route'
 
 validateEnv();
 new SeedData();
 
-const app = new App([new IndexRoute(), new UsersRoute(), new AuthRoute(),new TicketRoute(),new IssueRoute(), new IssueStatusRoute()]);
+const app = new App([new IndexRoute(), new UsersRoute(), new AuthRoute(),new TicketRoute(),new IssueRoute(), new IssueStatusRoute(), new TicketUserRoute()]);
 
 app.listen();

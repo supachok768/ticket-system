@@ -7,7 +7,7 @@ class TicketUserController {
   public getTicketUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const userId = Number(req.user['id']);
-      const findAllTicketUserData: TicketUser[] = await this.ticketUserService.findTicketUser(userId,Number(req.params.perPage), Number(req.params.numPage));
+      const findAllTicketUserData = await this.ticketUserService.findTicketUser(userId,Number(req.params.perPage), Number(req.params.numPage));
 
       res.status(200).json({ data: findAllTicketUserData, message: 'findAll' });
     } catch (error) {

@@ -7,7 +7,7 @@ class TicketService {
   public ticket = new PrismaClient().ticket;
   public ticketUser = new PrismaClient().ticketUser;
 
-  public findTicket(perPage?: number, numPage?: number): Promise<Ticket[]> {
+  public findTicket(perPage: number = NaN, numPage: number=NaN): Promise<Ticket[]> {
     let option = {};
 
     if (!Number.isNaN(perPage)) {

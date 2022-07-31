@@ -1,25 +1,42 @@
+import { Inventory } from '@/interfaces/inventory.interface';
 import { PrismaClient, Ticket, TicketUser } from '@prisma/client';
-import { BuyTicketDto, CreateTicketDto } from '@dtos/ticket.dto';
-import { HttpException } from '@exceptions/HttpException';
-import { isEmpty } from '@utils/util';
+import TicketService from './tickets.service';
 
 class TicketUserService {
   public ticketUser = new PrismaClient().ticketUser;
+  public issue = new PrismaClient().issue;
+  public ticket = new TicketService();
+  public async findTicketUser(userId: number, perPage: number = NaN, numPage: number = NaN) {
+    // let option = ;
 
-  public findTicketUser(userId: number, perPage?: number, numPage?: number): Promise<TicketUser[]> {
-    let option = {
+    // if (!Number.isNaN(perPage)) {
+    //   option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
+    // }
+
+    const ticket: Ticket[] = await this.ticket.findTicket();
+
+    const TicketInventory = await this.ticketUser.groupBy({
+      by: ['ticketId'],
       where: { userId: userId },
-      include: {
-        Ticket: true,
+      _sum: {
+        amount: true,
       },
-    };
+    });
 
-    if (!Number.isNaN(perPage)) {
-      option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
-    }
+    const TicketUsed = await this.issue.groupBy({
+      by: ['ticketId'],
+      where: { requestFromId: userId },
+      _count: true,
+    });
 
-    const TicketUser: Promise<TicketUser[]> = this.ticketUser.findMany(option);
-    return TicketUser;
+    const Inventory: Array<Inventory> = TicketInventory.map(ticketSum => {
+      const ticketInfo: Ticket = ticket.find((x: Ticket) => x.id == ticketSum.ticketId);
+      const findTicketUsed = TicketUsed.find(x => x.ticketId == ticketSum.ticketId);
+      const qty: number = ticketSum._sum.amount - findTicketUsed._count;
+      return { ticket: ticketInfo, qty: qty };
+    });
+
+    return Inventory;
   }
 }
 

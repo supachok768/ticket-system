@@ -4,7 +4,7 @@ import authMiddleware from '@middlewares/auth.middleware';
 import TicketUserController from '@/controllers/ticket_user.controller';
 
 class TicketUserRoute implements Routes {
-  public path = '/ticket_user';
+  public path = '/inventory';
   public router = Router();
   public ticketUserController = new TicketUserController();
 
