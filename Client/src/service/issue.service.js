@@ -10,6 +10,21 @@ export default class IssueService {
         return this.axios.get(`${this.basePath}/assign/me`)
     }
     getIssueRequestFromMe() {
-        return this.axios.get(`${this.basePath}/request/me`)
+        return this.axios.get(`${this.basePath}/request/me`,)
+    }
+    openIssue(subject, description, assignToId, ticketId, issueStatusId) {
+        return this.axios.post(`${this.basePath}`, {
+            subject: subject,
+            description: description,
+            assignToId: assignToId,
+            ticketId: ticketId,
+            issueStatusId: issueStatusId
+        })
+    }
+
+    updateStatusIssue(Id, issueStatusId) {
+        return this.axios.put(`${this.basePath}/${Id}`, {
+            issueStatusId: issueStatusId
+        })
     }
 }

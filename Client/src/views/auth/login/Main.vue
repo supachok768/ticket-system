@@ -96,6 +96,12 @@
 </template>
 
 <script lang="ts">
+const asyncLocalStorage = {
+  setItem: (value: string) =>
+    Promise.resolve().then(function () {
+      localStorage.setItem("token", value);
+    }),
+};
 export default {
   data() {
     return {
@@ -134,16 +140,17 @@ export default {
         this.dummyUser[this.loginForm.dummySelected].password;
     },
     login() {
-      console.log(this.$axios);
       this.$axios
         .post("/login", {
           email: this.loginForm.email,
           password: this.loginForm.password,
         })
-        .then((result) => {
-          localStorage.setItem("token", result.data.data.token.token);
-          this.$router.push({
-            name: "dashboard",
+        .then((result: any): void => {
+          console.log(result);
+          asyncLocalStorage.setItem(result.data.data.token.token).then(() => {
+            this.$router.push({
+              name: "dashboard",
+            });
           });
         })
         .catch((err) => {

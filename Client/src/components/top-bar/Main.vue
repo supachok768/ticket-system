@@ -17,7 +17,12 @@
         @click="$emit('setMobileMenu')"
       >
         <BarChart2Icon
-          class="mobile-menu-toggler__icon transform rotate-90 dark:text-slate-500"
+          class="
+            mobile-menu-toggler__icon
+            transform
+            rotate-90
+            dark:text-slate-500
+          "
         />
       </div>
     </div>
@@ -58,7 +63,21 @@
             placeholder="Quick Search..."
           />
           <div
-            class="h-6 text-xs bg-slate-200 text-slate-500 px-2 flex items-center rounded-md absolute inset-y-0 right-0 my-auto mr-4"
+            class="
+              h-6
+              text-xs
+              bg-slate-200
+              text-slate-500
+              px-2
+              flex
+              items-center
+              rounded-md
+              absolute
+              inset-y-0
+              right-0
+              my-auto
+              mr-4
+            "
           >
             ESC
           </div>
@@ -68,39 +87,92 @@
           <div class="mb-5">
             <a href="" class="flex items-center mt-3 first:mt-0">
               <div
-                class="w-7 h-7 bg-success/20 dark:bg-success/10 text-success flex items-center justify-center rounded-full"
+                class="
+                  w-7
+                  h-7
+                  bg-success/20
+                  dark:bg-success/10
+                  text-success
+                  flex
+                  items-center
+                  justify-center
+                  rounded-full
+                "
               >
                 <InboxIcon class="w-3.5 h-3.5" />
               </div>
               <div class="ml-3 truncate">Compose New Mail</div>
               <div
-                class="ml-auto w-48 truncate text-slate-500 text-xs flex justify-end items-center"
+                class="
+                  ml-auto
+                  w-48
+                  truncate
+                  text-slate-500 text-xs
+                  flex
+                  justify-end
+                  items-center
+                "
               >
                 <LinkIcon class="w-3.5 h-3.5 mr-2" /> Quick Access
               </div>
             </a>
             <a href="" class="flex items-center mt-3 first:mt-0">
               <div
-                class="w-7 h-7 bg-pending/10 text-pending flex items-center justify-center rounded-full"
+                class="
+                  w-7
+                  h-7
+                  bg-pending/10
+                  text-pending
+                  flex
+                  items-center
+                  justify-center
+                  rounded-full
+                "
               >
                 <UsersIcon class="w-3.5 h-3.5" />
               </div>
               <div class="ml-3 truncate">Contacts</div>
               <div
-                class="ml-auto w-48 truncate text-slate-500 text-xs flex justify-end items-center"
+                class="
+                  ml-auto
+                  w-48
+                  truncate
+                  text-slate-500 text-xs
+                  flex
+                  justify-end
+                  items-center
+                "
               >
                 <LinkIcon class="w-3.5 h-3.5 mr-2" /> Quick Access
               </div>
             </a>
             <a href="" class="flex items-center mt-3 first:mt-0">
               <div
-                class="w-7 h-7 bg-primary/10 dark:bg-primary/20 text-primary/80 flex items-center justify-center rounded-full"
+                class="
+                  w-7
+                  h-7
+                  bg-primary/10
+                  dark:bg-primary/20
+                  text-primary/80
+                  flex
+                  items-center
+                  justify-center
+                  rounded-full
+                "
               >
                 <CreditCardIcon class="w-3.5 h-3.5" />
               </div>
               <div class="ml-3 truncate">Product Reports</div>
               <div
-                class="ml-auto w-48 truncate text-slate-500 text-xs flex justify-end items-center"
+                class="
+                  ml-auto
+                  w-48
+                  truncate
+                  text-slate-500 text-xs
+                  flex
+                  justify-end
+                  items-center
+                "
               >
                 <LinkIcon class="w-3.5 h-3.5 mr-2" /> Quick Access
               </div>
@@ -189,7 +261,17 @@
                 :src="faker.photos[0]"
               />
               <div
-                class="w-3 h-3 bg-success absolute right-0 bottom-0 rounded-full border-2 border-white dark:border-darkmode-600"
+                class="
+                  w-3
+                  h-3
+                  bg-success
+                  absolute
+                  right-0
+                  bottom-0
+                  rounded-full
+                  border-2 border-white
+                  dark:border-darkmode-600
+                "
               ></div>
             </div>
             <div class="ml-2">
@@ -228,7 +310,11 @@
         <div class="w-10 h-10 image-fit">
           <img
             alt="Rocketman - HTML Admin Template"
-            class="rounded-full border-2 border-white border-opacity-10 shadow-lg"
+            class="
+              rounded-full
+              border-2 border-white border-opacity-10
+              shadow-lg
+            "
             :src="$f()[9].photos[0]"
           />
         </div>
@@ -241,7 +327,7 @@
       </DropdownToggle>
       <DropdownMenu class="w-56">
         <DropdownContent>
-          <DropdownItem>
+          <!-- <DropdownItem>
             <UserIcon class="w-4 h-4 mr-2" /> Profile
           </DropdownItem>
           <DropdownItem>
@@ -253,8 +339,8 @@
           <DropdownItem>
             <HelpCircleIcon class="w-4 h-4 mr-2" /> Help
           </DropdownItem>
-          <DropdownDivider />
-          <DropdownItem>
+          <DropdownDivider /> -->
+          <DropdownItem @click="logout">
             <ToggleRightIcon class="w-4 h-4 mr-2" /> Logout
           </DropdownItem>
         </DropdownContent>
@@ -288,4 +374,18 @@ dom("body").on("keydown", function (e) {
     searchResultModal.value = true;
   }
 });
+</script>
+
+
+<script>
+export default {
+  methods: {
+    logout() {
+      localStorage.removeItem("token");
+      this.$router.push({
+        name: "login",
+      });
+    },
+  },
+};
 </script>

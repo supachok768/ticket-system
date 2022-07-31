@@ -24,10 +24,36 @@ import Login from "../views/auth/login/Main.vue";
 import Register from "../views/auth/register/Main.vue";
 import ErrorPage from "../views/error-page/Main.vue";
 
+import AxiosInstance from "../axios.config";
+
+
+const asyncLocalStorage = {
+  setItem: (value) =>
+    Promise.resolve().then(function () {
+      localStorage.setItem("token", value);
+    }),
+};
+
+const AuthGuard = (to, from, next) => {
+  AxiosInstance.post('/verify', {}, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.token}`
+    }
+  }).then((result) => {
+    asyncLocalStorage.setItem(result.data.data.token.token).then(() => {
+      next()
+    })
+  }).catch((err) => {
+    next({ name: 'login' });
+  });
+}
+
 const routes = [
   {
     path: "/",
     component: MainLayout,
+    beforeEnter: AuthGuard,
     children: [
       {
         path: "/",
@@ -39,6 +65,7 @@ const routes = [
   {
     path: "/users",
     component: MainLayout,
+    beforeEnter: AuthGuard,
     children: [
       {
         path: "",
@@ -55,6 +82,7 @@ const routes = [
   {
     path: "/ticket",
     component: MainLayout,
+    beforeEnter: AuthGuard,
     children: [
       {
         path: "",
@@ -86,6 +114,7 @@ const routes = [
   {
     path: "/task",
     component: MainLayout,
+    beforeEnter: AuthGuard,
     children: [
       {
         path: "",
@@ -132,5 +161,7 @@ const router = createRouter({
     return savedPosition || { left: 0, top: 0 };
   },
 });
+
+
 
 export default router;

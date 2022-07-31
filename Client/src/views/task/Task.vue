@@ -11,7 +11,7 @@
   </div>
 
   <!-- BEGIN: Filter -->
-  <!-- <div class="intro-y box p-5 mt-7 flex flex-col xl:flex-row gap-y-3">
+  <div class="intro-y box p-5 mt-7 flex flex-col xl:flex-row gap-y-3">
     <div
       class="
         form-inline
@@ -57,7 +57,7 @@
     <button class="btn btn-primary shadow-md" @click="onSearch">
       <SearchIcon class="w-4 h-4 mr-2" /> Filter
     </button>
-  </div> -->
+  </div>
   <!-- END: Filter -->
   <!-- <div class="grid grid-cols-12 gap-6 mt-5"> -->
   <!-- BEGIN: Data List -->
