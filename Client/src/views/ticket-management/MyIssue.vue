@@ -122,7 +122,7 @@
   </div>
   <!-- END: Data List -->
   <!-- BEGIN: Pagination -->
-  <!-- <div
+  <div
     class="
       intro-y
       col-span-12
@@ -195,7 +195,7 @@
       <option :value="35">35</option>
       <option :value="50">50</option>
     </select>
-  </div> -->
+  </div>
   <!-- END: Pagination -->
   <!-- </div> -->
   <!-- BEGIN: Issue Information Modal -->

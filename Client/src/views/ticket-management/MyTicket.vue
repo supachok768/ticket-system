@@ -102,38 +102,29 @@
       <thead>
         <tr>
           <th class="whitespace-nowrap">NAME</th>
-          <th class="text-center whitespace-nowrap">TYPES</th>
           <th class="text-center whitespace-nowrap">QTY</th>
           <th class="text-center whitespace-nowrap">STATUS</th>
           <th class="text-center whitespace-nowrap">ACTIONS</th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(faker, fakerKey) in dataList"
-          :key="fakerKey"
-          class="intro-x"
-        >
+        <tr v-for="(item, key) in dataList" :key="key" class="intro-x">
           <td>
             <a href="" class="font-medium whitespace-nowrap">{{
-              faker.products[0].name
+              item.ticket.name
             }}</a>
-            <div class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-              {{ faker.products[0].category }}
-            </div>
           </td>
-          <td class="text-center">{{ faker.stocks[0] }}</td>
-          <td class="text-center">{{ faker.stocks[0] }}</td>
+          <td class="text-center">{{ item.qty }}</td>
           <td class="w-40">
             <div
               class="flex items-center justify-center"
               :class="{
-                'text-success': faker.trueFalse[0],
-                'text-danger': !faker.trueFalse[0],
+                'text-success': item.ticket.isActive,
+                'text-danger': !item.ticket.isActive,
               }"
             >
               <CheckSquareIcon class="w-4 h-4 mr-2" />
-              {{ faker.trueFalse[0] ? "Active" : "Inactive" }}
+              {{ item.ticket.isActive ? "Active" : "Inactive" }}
             </div>
           </td>
           <td class="table-report__action w-56">
@@ -149,7 +140,7 @@
               <a
                 class="flex items-center text-danger"
                 href="javascript:;"
-                @click="onIssueOpen(fakerKey)"
+                @click="onIssueOpen(item.ticket.id)"
               >
                 <NavigationIcon class="w-4 h-4 mr-1" /> Use
               </a>
@@ -293,11 +284,14 @@
                     }"
                     class="w-full"
                   >
-                    <option value="1">Leonardo DiCaprio</option>
-                    <option value="2">Johnny Deep</option>
-                    <option value="3">Robert Downey, Jr</option>
-                    <option value="4">Samuel L. Jackson</option>
-                    <option value="5">Morgan Freeman</option>
+                    <option
+                      v-for="(item, key) in usersList"
+                      :key="key"
+                      :value="item.id"
+                    >
+                      {{ item.firstName }}
+                      {{ item.lastName }}
+                    </option>
                   </TomSelect>
                 </div>
                 <div class="mt-3">
@@ -311,30 +305,31 @@
                     class="w-full"
                     disabled
                   >
-                    <option value="1">Leonardo DiCaprio</option>
-                    <option value="2">Johnny Deep</option>
-                    <option value="3">Robert Downey, Jr</option>
-                    <option value="4">Samuel L. Jackson</option>
-                    <option value="5">Morgan Freeman</option>
+                    <option
+                      v-for="(item, key) in issueStatusList"
+                      :key="key"
+                      :value="item.id"
+                    >
+                      {{ item.name }}
+                    </option>
                   </TomSelect>
                 </div>
                 <div class="mt-3">
                   <label for="issueFormTicket" class="form-label">Ticket</label>
-                  <TomSelect
+                  <select
                     id="issueFormTicket"
                     v-model="issueInformation.ticket"
-                    :options="{
-                      placeholder: 'Select your favorite actors',
-                    }"
                     class="w-full"
                     disabled
                   >
-                    <option value="1">Leonardo DiCaprio</option>
-                    <option value="2">Johnny Deep</option>
-                    <option value="3">Robert Downey, Jr</option>
-                    <option value="4">Samuel L. Jackson</option>
-                    <option value="5">Morgan Freeman</option>
-                  </TomSelect>
+                    <option
+                      v-for="(item, key) in ticketList"
+                      :key="key"
+                      :value="item.id"
+                    >
+                      {{ item.name }}
+                    </option>
+                  </select>
                 </div>
                 <div class="mt-3">
                   <label for="issueFormDes" class="form-label"
@@ -373,13 +368,26 @@
 
 
 <script lang="ts">
+import InventoryService from "../../service/inventory.service";
+import TicketService from "../../service/ticket.service";
+import UsersService from "../../service/users.service";
+import IssueStatusService from "../../service/issue_status.service";
+import IssueService from "../../service/issue.service";
 export default {
   data() {
     return {
+      inventoryService: new InventoryService(this.$axios),
+      ticketService: new TicketService(this.$axios),
+      userService: new UsersService(this.$axios),
+      issueStatusService: new IssueStatusService(this.$axios),
+      issueService: new IssueService(this.$axios),
       informationModal: false,
       openIssueModal: false,
       currentSelectDeleteId: undefined,
-      dataList: this.$f(),
+      dataList: [],
+      ticketList: [],
+      usersList: [],
+      issueStatusList: [],
       search: { name: "", type: [], status: "active" },
       issueInformation: {
         subject: "",
@@ -395,23 +403,70 @@ export default {
       },
     };
   },
+  mounted() {
+    this.getInventory();
+    this.getTicket();
+    this.getUsers();
+    this.getIssueStatus();
+  },
   methods: {
+    getInventory() {
+      this.inventoryService
+        .getInventory()
+        .then((result) => {
+          this.dataList = result.data.data.filter((x) => x.qty > 0);
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
+    getTicket() {
+      this.ticketService
+        .getTicket()
+        .then((result) => {
+          this.ticketList = result.data.data;
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
+    getUsers() {
+      this.userService
+        .getUsers()
+        .then((result) => {
+          console.log(result.data.data);
+          this.usersList = result.data.data;
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
+    getIssueStatus() {
+      this.issueStatusService
+        .getIssueStatus()
+        .then((result) => {
+          this.issueStatusList = result.data.data;
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
     onIssueOpen(id) {
-      // this.$router.push({
-      //   name: "user-detail",
-      //   params: {
-      //     mode: "edit",
-      //     id: id,
-      //   },
-      // });
       this.issueInformation.subject = "";
-      this.issueInformation.assignTo = "";
-      this.issueInformation.status = "";
+      this.issueInformation.assignTo = this.usersList[0].id;
+      this.issueInformation.status = this.issueStatusList.find(
+        (x) => x.name == "Open"
+      ).id;
       this.issueInformation.ticket = id;
       this.issueInformation.description = "";
       this.openIssueModal = true;
     },
-    onIssueSave() {},
+    onIssueSave() {
+      this.issueService
+        .openIssue(
+          this.issueInformation.subject,
+          this.issueInformation.description,
+          this.issueInformation.assignTo,
+          this.issueInformation.ticket,
+          this.issueInformation.status
+        )
+        .then((result) => {
+          //
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
     // onView(id) {
     //   this.currentSelectDeleteId = id;
     //   this.informationModal = true;

@@ -99,6 +99,7 @@
 const asyncLocalStorage = {
   setItem: (value: string) =>
     Promise.resolve().then(function () {
+      localStorage.removeItem("token");
       localStorage.setItem("token", value);
     }),
 };

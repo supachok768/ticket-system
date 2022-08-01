@@ -12,19 +12,22 @@ export default class IssueService {
     getIssueRequestFromMe() {
         return this.axios.get(`${this.basePath}/request/me`,)
     }
+    getIssueAssignToday() {
+        return this.axios.get(`${this.basePath}/assign/me/today`,)
+    }
     openIssue(subject, description, assignToId, ticketId, issueStatusId) {
         return this.axios.post(`${this.basePath}`, {
             subject: subject,
             description: description,
-            assignToId: assignToId,
-            ticketId: ticketId,
-            issueStatusId: issueStatusId
+            assignToId: parseInt(assignToId),
+            ticketId: parseInt(ticketId),
+            issueStatusId: parseInt(issueStatusId)
         })
     }
 
     updateStatusIssue(Id, issueStatusId) {
         return this.axios.put(`${this.basePath}/${Id}`, {
-            issueStatusId: issueStatusId
+            issueStatusId: parseInt(issueStatusId)
         })
     }
 }
