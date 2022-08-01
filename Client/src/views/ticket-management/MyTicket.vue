@@ -376,8 +376,8 @@ import IssueService from "../../service/issue.service";
 export default {
   data() {
     return {
-      inventoryService: new InventoryService(this.$axios),
       ticketService: new TicketService(this.$axios),
+      inventoryService: new InventoryService(this.$axios),
       userService: new UsersService(this.$axios),
       issueStatusService: new IssueStatusService(this.$axios),
       issueService: new IssueService(this.$axios),

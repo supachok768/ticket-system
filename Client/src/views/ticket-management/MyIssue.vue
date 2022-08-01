@@ -14,7 +14,7 @@
   </div>
 
   <!-- BEGIN: Filter -->
-  <!-- <div class="intro-y box p-5 mt-7 flex flex-col xl:flex-row gap-y-3">
+  <div class="intro-y box p-5 mt-7 flex flex-col xl:flex-row gap-y-3">
     <div
       class="
         form-inline
@@ -60,7 +60,7 @@
     <button class="btn btn-primary shadow-md" @click="onSearch">
       <SearchIcon class="w-4 h-4 mr-2" /> Filter
     </button>
-  </div> -->
+  </div>
   <!-- END: Filter -->
   <!-- <div class="grid grid-cols-12 gap-6 mt-5"> -->
   <!-- BEGIN: Data List -->
@@ -231,11 +231,14 @@
                     }"
                     class="w-full"
                   >
-                    <option value="1">Leonardo DiCaprio</option>
-                    <option value="2">Johnny Deep</option>
-                    <option value="3">Robert Downey, Jr</option>
-                    <option value="4">Samuel L. Jackson</option>
-                    <option value="5">Morgan Freeman</option>
+                    <option
+                      v-for="(item, key) in usersList"
+                      :key="key"
+                      :value="item.id"
+                    >
+                      {{ item.firstName }}
+                      {{ item.lastName }}
+                    </option>
                   </TomSelect>
                 </div>
                 <div class="mt-3">
@@ -249,11 +252,13 @@
                     class="w-full"
                     disabled
                   >
-                    <option value="1">Leonardo DiCaprio</option>
-                    <option value="2">Johnny Deep</option>
-                    <option value="3">Robert Downey, Jr</option>
-                    <option value="4">Samuel L. Jackson</option>
-                    <option value="5">Morgan Freeman</option>
+                    <option
+                      v-for="(item, key) in issueStatusList"
+                      :key="key"
+                      :value="item.id"
+                    >
+                      {{ item.name }}
+                    </option>
                   </TomSelect>
                 </div>
                 <div class="mt-3">
@@ -266,11 +271,13 @@
                     }"
                     class="w-full"
                   >
-                    <option value="1">Leonardo DiCaprio</option>
-                    <option value="2">Johnny Deep</option>
-                    <option value="3">Robert Downey, Jr</option>
-                    <option value="4">Samuel L. Jackson</option>
-                    <option value="5">Morgan Freeman</option>
+                    <option
+                      v-for="(item, key) in inventoryList"
+                      :key="key"
+                      :value="item.id"
+                    >
+                      {{ item.name }}
+                    </option>
                   </TomSelect>
                 </div>
                 <div class="mt-3">
@@ -311,12 +318,22 @@
 
 <script lang="ts">
 import IssueService from "../../service/issue.service";
+import InventoryService from "../../service/inventory.service";
+import UsersService from "../../service/users.service";
+import IssueStatusService from "../../service/issue_status.service";
+
 export default {
   data() {
     return {
       issueService: new IssueService(this.$axios),
+      inventoryService: new InventoryService(this.$axios),
+      userService: new UsersService(this.$axios),
+      issueStatusService: new IssueStatusService(this.$axios),
       openIssueModal: false,
       dataList: [],
+      inventoryList: [],
+      usersList: [],
+      issueStatusList: [],
       search: { name: "", status: "active" },
       issueInformation: {
         subject: "",
@@ -334,6 +351,9 @@ export default {
   },
   mounted() {
     this.getIssue();
+    this.getInventory();
+    this.getUsers();
+    this.getIssueStatus();
   },
   methods: {
     getIssue() {
@@ -342,6 +362,33 @@ export default {
         .then((result) => {
           console.log(result.data.data);
           this.dataList = result.data.data;
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
+    getInventory() {
+      this.inventoryService
+        .getInventory()
+        .then((result) => {
+          this.inventoryList = result.data.data
+            .filter((x) => x.qty > 0)
+            .map((item) => item.ticket);
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
+    getUsers() {
+      this.userService
+        .getUsers()
+        .then((result) => {
+          console.log(result.data.data);
+          this.usersList = result.data.data;
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
+    getIssueStatus() {
+      this.issueStatusService
+        .getIssueStatus()
+        .then((result) => {
+          this.issueStatusList = result.data.data;
         })
         .catch((e) => alert(e.response.data.message));
     },
@@ -354,19 +401,29 @@ export default {
       });
     },
     onIssueOpen() {
-      // this.$router.push({
-      //   name: "user-detail",
-      //   params: {
-      //     mode: "edit",
-      //     id: id,
-      //   },
-      // });
       this.issueInformation.subject = "";
-      this.issueInformation.assignTo = "";
-      this.issueInformation.status = "";
-      this.issueInformation.ticket = 0;
+      this.issueInformation.assignTo = this.usersList[0].id;
+      this.issueInformation.status = this.issueStatusList.find(
+        (x) => x.name == "Open"
+      ).id;
+      this.issueInformation.ticket = this.inventoryList[0].id;
       this.issueInformation.description = "";
       this.openIssueModal = true;
+    },
+    onIssueSave() {
+      this.issueService
+        .openIssue(
+          this.issueInformation.subject,
+          this.issueInformation.description,
+          this.issueInformation.assignTo,
+          this.issueInformation.ticket,
+          this.issueInformation.status
+        )
+        .then((result) => {
+          this.getIssue();
+          this.openIssueModal = false;
+        })
+        .catch((e) => alert(e.response.data.message));
     },
     onSearch() {
       console.log(this.inputSearch);
