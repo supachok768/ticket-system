@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const baseUrl = 'http://localhost:3001'
-export default createInstance(baseUrl);
+const instance = createInstance(baseUrl);
 
 function createInstance(baseURL) {
     return axios.create({
@@ -12,3 +12,10 @@ function createInstance(baseURL) {
         }
     });
 }
+instance.interceptors.request.use(function (config) {
+    const token = localStorage.getItem('token');
+    config.headers.Authorization = token ? `Bearer ${token}` : '';
+    return config;
+});
+
+export default instance
