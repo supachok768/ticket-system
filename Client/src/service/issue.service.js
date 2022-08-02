@@ -6,6 +6,9 @@ export default class IssueService {
     getIssue() {
         return this.axios.get(`${this.basePath}`)
     }
+    getIssueById(Id) {
+        return this.axios.get(`${this.basePath}/${parseInt(Id)}`)
+    }
     getIssueAssignMe() {
         return this.axios.get(`${this.basePath}/assign/me`)
     }

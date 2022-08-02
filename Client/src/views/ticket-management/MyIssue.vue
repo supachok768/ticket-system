@@ -109,7 +109,7 @@
               <a
                 class="flex items-center mr-3"
                 href="javascript:;"
-                @click="onChat(item)"
+                @click="onChat(item.id)"
               >
                 <MessageCircleIcon class="w-4 h-4 mr-1" />
                 Chat

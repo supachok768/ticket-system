@@ -220,23 +220,28 @@
         >
           <div class="flex items-center">
             <TypeIcon class="w-4 h-4 text-slate-500 mr-2" />
-            title
+            {{ issueData.subject }}
           </div>
           <div class="flex items-center">
             <TypeIcon class="w-4 h-4 text-slate-500 mr-2" />
-            Describe
+            {{ issueData.description }}
           </div>
           <div class="flex items-center">
             <UserIcon class="w-4 h-4 text-slate-500 mr-2" />
-            Requestor
+            Requestor :
+            {{ issueData.RequestFrom.firstName }}
+            {{ issueData.RequestFrom.lastName }}
           </div>
           <div class="flex items-center">
             <UserIcon class="w-4 h-4 text-slate-500 mr-2" />
-            supporter
+            Operator :
+            {{ issueData.AssignTo.firstName }}
+            {{ issueData.AssignTo.lastName }}
           </div>
           <div class="flex items-center">
             <CalendarIcon class="w-4 h-4 text-slate-500 mr-2" />
-            02 February 2022
+            <!-- 02 February 2022 -->
+            {{ issueData.createAt }}
           </div>
         </div>
         <div class="flex">
@@ -248,37 +253,64 @@
           </button>
         </div>
       </div>
-
-      <div class="intro-x flex items-center h-10 mt-4">
-        <h2 class="text-lg font-medium truncate mr-5">Status Timeline</h2>
-      </div>
-      <div class="mt-4">
-        <div
-          v-for="(faker, fakerKey) in $_.take($f(), 4)"
-          :key="fakerKey"
-          class="intro-x"
-        >
-          <div class="box px-5 py-3 flex items-center zoom-in mb-3">
-            <div class="mr-auto">
-              <div class="font-medium">
-                {{ faker.users[0].name }}
+      <!-- BEGIN: Status Timeline -->
+      <div v-if="issueData != undefined">
+        <div class="intro-x flex items-center h-10 mt-4">
+          <h2 class="text-lg font-medium truncate mr-5">Status Timeline</h2>
+        </div>
+        <div class="mt-4">
+          <div
+            v-for="(items, key) in issueData.IssueStatusTransaction"
+            :key="key"
+            class="intro-x"
+          >
+            <div class="box px-5 py-3 flex items-center zoom-in mb-3">
+              <div class="mr-auto">
+                <div class="font-medium">
+                  {{ items.IssueStatus.name }}
+                </div>
+                <div class="text-slate-500 text-xs mt-1">
+                  {{ items.createAt }}
+                </div>
               </div>
-              <div class="text-slate-500 text-xs mt-1">
-                {{ faker.dates[0] }}
-              </div>
-            </div>
-            <div
-              :class="{
-                'text-success': faker.trueFalse[0],
-                'text-danger': !faker.trueFalse[0],
-              }"
-            >
-              {{ faker.trueFalse[0] ? "+" : "-" }}${{ faker.totals[0] }}
             </div>
           </div>
         </div>
       </div>
+      <!-- END: Status Timeline -->
     </div>
     <!-- END: Chat Side Menu -->
   </div>
 </template>
+
+<script lang="ts">
+import IssueService from "../../service/issue.service";
+export default {
+  data() {
+    return {
+      issueService: new IssueService(this.$axios),
+      issueData: undefined,
+    };
+  },
+  mounted() {
+    if (isNaN(this.$route.params.id)) {
+      alert("parameter is not integers");
+      this.$router.push({ name: "my-issue" });
+      return;
+    }
+
+    this.getIssue();
+  },
+  methods: {
+    getIssue() {
+      this.issueService
+        .getIssueById(this.$route.params.id)
+        .then((result) => {
+          this.issueData = result.data.data;
+          console.log(result.data.data);
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
+  },
+};
+</script>

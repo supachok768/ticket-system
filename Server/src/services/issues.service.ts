@@ -110,6 +110,8 @@ class IssueService {
       where: { id: issueId },
       include: {
         Ticket: true,
+        AssignTo:true,
+        RequestFrom:true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
         },
