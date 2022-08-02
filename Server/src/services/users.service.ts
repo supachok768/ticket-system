@@ -1,6 +1,6 @@
 import { hash } from 'bcrypt';
 import { PrismaClient, User, UserRole } from '@prisma/client';
-import { CreateUserDto } from '@dtos/users.dto';
+import { CreateUserDto, UpdateUserDto } from '@dtos/users.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { isEmpty } from '@utils/util';
 import { IUserRoleNested } from '@/interfaces/user_role.interface';
@@ -75,7 +75,7 @@ class UserService {
     return createUserData;
   }
 
-  public async updateUser(userId: number, userData: CreateUserDto): Promise<User> {
+  public async updateUser(userId: number, userData: UpdateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
     const findUser = await this.users.findUnique({
@@ -119,7 +119,7 @@ class UserService {
       where: { id: userId },
       data: {
         ...userData,
-        password: hashedPassword,
+        password: (userData.password) ? hashedPassword : findUser.password,
         UserRole: {
           createMany: {
             data: newUserRole,

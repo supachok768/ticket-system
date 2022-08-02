@@ -22,6 +22,29 @@ export class CreateUserDto {
   public rolesActive: number[];
 }
 
+export class UpdateUserDto {
+  @IsEmail()
+  public email: string;
+
+  @IsOptional()
+  @IsString()
+  public password: string;
+
+  @IsString()
+  public firstName: string;
+
+  @IsString()
+  public lastName: string;
+
+  @IsOptional()
+  @IsBoolean()
+  public isActive: boolean;
+
+  @IsArray()
+  @IsOptional()
+  public rolesActive: number[];
+}
+
 export class LoginUserDto {
   @IsEmail()
   public email: string;

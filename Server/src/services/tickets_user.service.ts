@@ -32,7 +32,7 @@ class TicketUserService {
     const Inventory: Array<Inventory> = TicketInventory.map(ticketSum => {
       const ticketInfo: Ticket = ticket.find((x: Ticket) => x.id == ticketSum.ticketId);
       const findTicketUsed = TicketUsed.find(x => x.ticketId == ticketSum.ticketId);
-      const qty: number = findTicketUsed ? ticketSum._sum.amount - findTicketUsed._count :ticketSum._sum.amount ;
+      const qty: number = findTicketUsed ? ticketSum._sum.amount - findTicketUsed._count : ticketSum._sum.amount;
       return { ticket: ticketInfo, qty: qty };
     });
 

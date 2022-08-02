@@ -13,8 +13,8 @@ class IssueService {
   public findIssue(perPage?: number, numPage?: number): Promise<Issue[]> {
     let option = {
       include: {
-        AssignTo:true,
-        RequestFrom:true,
+        AssignTo: true,
+        RequestFrom: true,
         Ticket: true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
@@ -26,18 +26,23 @@ class IssueService {
       option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
     }
 
-    const Issue: Promise<Issue[]> = this.issue.findMany(option);
+    const Issue: Promise<Issue[]> = this.issue.findMany({
+      ...option,
+      orderBy: {
+        createAt: 'desc',
+      },
+    });
     return Issue;
   }
 
-  public findIssueRequest(userId:number, perPage?: number, numPage?: number): Promise<Issue[]> {
+  public findIssueRequest(userId: number, perPage?: number, numPage?: number): Promise<Issue[]> {
     let option = {
       where: {
         requestFromId: userId,
       },
       include: {
-        AssignTo:true,
-        RequestFrom:true,
+        AssignTo: true,
+        RequestFrom: true,
         Ticket: true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
@@ -49,18 +54,23 @@ class IssueService {
       option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
     }
 
-    const Issue: Promise<Issue[]> = this.issue.findMany(option);
+    const Issue: Promise<Issue[]> = this.issue.findMany({
+      ...option,
+      orderBy: {
+        createAt: 'desc',
+      },
+    });
     return Issue;
   }
 
-  public findIssueAssign(userId:number, perPage?: number, numPage?: number): Promise<Issue[]> {
+  public findIssueAssign(userId: number, perPage?: number, numPage?: number): Promise<Issue[]> {
     let option = {
       where: {
         assignToId: userId,
       },
       include: {
-        AssignTo:true,
-        RequestFrom:true,
+        AssignTo: true,
+        RequestFrom: true,
         Ticket: true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
@@ -72,22 +82,27 @@ class IssueService {
       option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
     }
 
-    const Issue: Promise<Issue[]> = this.issue.findMany(option);
+    const Issue: Promise<Issue[]> = this.issue.findMany({
+      ...option,
+      orderBy: {
+        createAt: 'desc',
+      },
+    });
     return Issue;
   }
 
-  public findIssueAssignToday(userId:number, perPage?: number, numPage?: number): Promise<Issue[]> {
+  public findIssueAssignToday(userId: number, perPage?: number, numPage?: number): Promise<Issue[]> {
     const date = new Date();
     let option = {
       where: {
         assignToId: userId,
         createAt: {
-          gte: new Date(date.toISOString().substring(0, 10))
+          gte: new Date(date.toISOString().substring(0, 10)),
         },
       },
       include: {
-        AssignTo:true,
-        RequestFrom:true,
+        AssignTo: true,
+        RequestFrom: true,
         Ticket: true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
@@ -99,7 +114,12 @@ class IssueService {
       option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
     }
 
-    const Issue: Promise<Issue[]> = this.issue.findMany(option);
+    const Issue: Promise<Issue[]> = this.issue.findMany({
+      ...option,
+      orderBy: {
+        createAt: 'desc',
+      },
+    });
     return Issue;
   }
 
@@ -110,10 +130,13 @@ class IssueService {
       where: { id: issueId },
       include: {
         Ticket: true,
-        AssignTo:true,
-        RequestFrom:true,
+        AssignTo: true,
+        RequestFrom: true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
+          orderBy: {
+            createAt: 'desc',
+          },
         },
       },
     });
@@ -139,14 +162,14 @@ class IssueService {
         userId: issueData.requestFromId,
       },
     });
-    const sumTicketUserHave:number = ticketUserHave.reduce((accumulator,curr)=>(accumulator + curr.amount),0)
+    const sumTicketUserHave: number = ticketUserHave.reduce((accumulator, curr) => accumulator + curr.amount, 0);
     const ticketUsed = await this.issue.findMany({
-      where:{
+      where: {
         ticketId: issueData.ticketId,
-        requestFromId: issueData.requestFromId
-      }
-    })
-    const sumTicketUsed:number = ticketUsed.length
+        requestFromId: issueData.requestFromId,
+      },
+    });
+    const sumTicketUsed: number = ticketUsed.length;
     if (sumTicketUserHave <= sumTicketUsed) throw new HttpException(400, "You're not have more ticket");
 
     const findAssignTo = await this.users.findUnique({
