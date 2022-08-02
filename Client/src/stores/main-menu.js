@@ -31,15 +31,15 @@ export const useMainMenuStore = defineStore("mainMenu", {
         pageName: "ticket-list",
         title: "Ticket",
       },
-      {
-        icon: "",
-        params: {
-          mode: "edit",
-          id: 0,
-        },
-        pageName: "ticket-detail",
-        title: "Ticket Detail",
-      },
+      // {
+      //   icon: "",
+      //   params: {
+      //     mode: "edit",
+      //     id: 0,
+      //   },
+      //   pageName: "ticket-detail",
+      //   title: "Ticket Detail",
+      // },
       {
         icon: "",
         pageName: "my-ticket",

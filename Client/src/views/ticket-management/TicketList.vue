@@ -77,48 +77,46 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(faker, fakerKey) in dataList"
-          :key="fakerKey"
-          class="intro-x"
-        >
+        <tr v-for="(item, key) in dataList" :key="key" class="intro-x">
           <td>
-            <a href="" class="font-medium whitespace-nowrap">{{
-              faker.products[0].name
-            }}</a>
-            <div class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-              {{ faker.products[0].category }}
-            </div>
+            {{ item.name }}
           </td>
-          <td class="text-center">{{ faker.stocks[0] }}</td>
-          <td class="text-center">{{ faker.stocks[0] }}</td>
-          <td class="text-center">{{ faker.stocks[0] }}</td>
+          <td class="text-center">
+            {{ item.price }}
+          </td>
+          <td class="text-center">{{ item.amountLimitPerDay }}</td>
+          <td class="text-center">{{ item.minimumBuy }}</td>
           <td class="w-40">
             <div
               class="flex items-center justify-center"
               :class="{
-                'text-success': faker.trueFalse[0],
-                'text-danger': !faker.trueFalse[0],
+                'text-success': item.isActive,
+                'text-danger': !item.isActive,
               }"
             >
               <CheckSquareIcon class="w-4 h-4 mr-2" />
-              {{ faker.trueFalse[0] ? "Active" : "Inactive" }}
+              {{ item.isActive ? "Active" : "Inactive" }}
             </div>
           </td>
           <td class="table-report__action w-56">
             <div class="flex justify-center items-center">
-              <a
+              <router-link
                 class="flex items-center mr-3"
-                href="javascript:;"
-                @click="onEdit(fakerKey)"
+                :to="{
+                  name: 'ticket-detail',
+                  params: {
+                    mode: 'edit',
+                    id: item.id,
+                  },
+                }"
               >
                 <CheckSquareIcon class="w-4 h-4 mr-1" />
                 Edit
-              </a>
+              </router-link>
               <a
                 class="flex items-center text-danger"
                 href="javascript:;"
-                @click="onDeleteConfirmOpen(fakerKey)"
+                @click="onDeleteConfirmOpen(item.id)"
               >
                 <Trash2Icon class="w-4 h-4 mr-1" /> Delete
               </a>
@@ -238,12 +236,14 @@
 
 
 <script lang="ts">
+import TicketService from "../../service/ticket.service";
 export default {
   data() {
     return {
+      ticketService: new TicketService(this.$axios),
       deleteConfirmationModal: false,
       currentSelectDeleteId: undefined,
-      dataList: this.$f(),
+      dataList: undefined,
       search: { name: "", type: [], status: "active" },
       pagination: {
         sltPerPage: 10,
@@ -252,19 +252,23 @@ export default {
       },
     };
   },
+  mounted() {
+    this.getTicket();
+  },
   methods: {
+    getTicket() {
+      this.ticketService
+        .getTicket()
+        .then((result) => {
+          this.dataList = result.data.data;
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
+    },
     onDeleteConfirmOpen(id) {
       this.currentSelectDeleteId = id;
       this.deleteConfirmationModal = true;
-    },
-    onEdit(id) {
-      this.$router.push({
-        name: "ticket-detail",
-        params: {
-          mode: "edit",
-          id: id,
-        },
-      });
     },
     onNew() {
       this.$router.push({

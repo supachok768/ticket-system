@@ -65,7 +65,7 @@
           <button
             type="button"
             class="btn btn-outline-secondary w-24 mr-1"
-            @click="onCancel"
+            @click="onBackTicketList"
           >
             Cancel
           </button>
@@ -80,9 +80,11 @@
 </template>
 
 <script lang="ts">
+import TicketService from "../../service/ticket.service";
 export default {
   data() {
     return {
+      ticketService: new TicketService(this.$axios),
       form: {
         name: "",
         price: 0,
@@ -92,11 +94,71 @@ export default {
       },
     };
   },
+  mounted() {
+    if (this.$route.params.mode == "new") {
+      return;
+    }
+    if (isNaN(this.$route.params.id)) {
+      alert("parameter is not integers");
+      this.$router.push({ name: "ticket-list" });
+      return;
+    }
+    this.getTicket();
+  },
   methods: {
-    onSave() {},
-    onCancel() {
+    getTicket() {
+      this.ticketService
+        .getTicketById(this.$route.params.id)
+        .then((result) => {
+          this.form.name = result.data.data.name;
+          this.form.price = result.data.data.price;
+          this.form.limitPerDay = result.data.data.amountLimitPerDay;
+          this.form.minBuy = result.data.data.minimumBuy;
+          this.form.isActive = result.data.data.isActive;
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
+    },
+    onSave() {
+      if (this.$route.params.mode == "new") {
+        this.ticketService
+          .createTicket(
+            this.form.name,
+            this.form.price,
+            this.form.limitPerDay,
+            this.form.minBuy,
+            this.form.isActive
+          )
+          .then((result) => {
+            this.onBackTicketList();
+          })
+          .catch((err) => {
+            alert(err.response.data.message);
+          });
+      }
+
+      if (this.$route.params.mode == "edit") {
+        this.ticketService
+          .updateTicket(
+            this.$route.params.id,
+            this.form.name,
+            this.form.price,
+            this.form.limitPerDay,
+            this.form.minBuy,
+            this.form.isActive
+          )
+          .then((result) => {
+            this.onBackTicketList();
+          })
+          .catch((err) => {
+            alert(err.response.data.message);
+          });
+      }
+    },
+    onBackTicketList() {
       this.$router.push({
-        name: "user-list",
+        name: "ticket-list",
       });
     },
   },

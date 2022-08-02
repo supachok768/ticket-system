@@ -77,13 +77,11 @@ import TicketService from "../../service/ticket.service";
 export default {
   data() {
     return {
-      ticketService: undefined,
+      ticketService: new TicketService(this.$axios),
       ticketList: [],
     };
   },
   mounted() {
-    this.ticketService = new TicketService(this.$axios);
-
     this.getTicket();
   },
   methods: {
@@ -96,7 +94,9 @@ export default {
             buyAmount: x.minimumBuy,
           }));
         })
-        .catch((err) => {});
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
     },
     buyTicket(item) {
       this.ticketService
