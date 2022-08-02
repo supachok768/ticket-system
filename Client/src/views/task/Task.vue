@@ -100,14 +100,13 @@
           </td>
           <td class="table-report__action w-56">
             <div class="flex justify-center items-center">
-              <a
+              <router-link
                 class="flex items-center mr-3"
-                href="javascript:;"
-                @click="onChat(fakerKey)"
+                :to="{ name: 'task-conversation', params: { id: item.id } }"
               >
                 <MessageCircleIcon class="w-4 h-4 mr-1" />
                 Chat
-              </a>
+              </router-link>
             </div>
           </td>
         </tr>
@@ -338,14 +337,6 @@ export default {
           this.dataList = result.data.data;
         })
         .catch((e) => alert(e.response.data.message));
-    },
-    onChat(id) {
-      this.$router.push({
-        name: "task-conversation",
-        params: {
-          id: id,
-        },
-      });
     },
     onIssueOpen() {
       // this.$router.push({

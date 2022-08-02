@@ -203,7 +203,7 @@
     <!-- END: Chat Content -->
 
     <!-- BEGIN: Chat Side Menu -->
-    <div class="col-span-12 xl:col-span-4 2xl:col-span-3">
+    <div class="col-span-12 xl:col-span-4 2xl:col-span-3" v-if="issueData">
       <div class="box p-5 cursor-pointer mt-5 first:mt-0">
         <div class="flex items-center">
           <div class="w-2 h-2 bg-warning rounded-full mr-3"></div>
