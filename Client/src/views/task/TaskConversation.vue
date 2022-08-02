@@ -1,119 +1,12 @@
 
 
 <template>
-  <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
+  <!-- <div class="intro-y flex flex-col sm:flex-row items-center mt-8">
     <h2 class="text-lg font-medium mr-auto">
       Conversation {{ $route.params.id }}
     </h2>
-  </div>
+  </div> -->
   <div class="grid grid-cols-12 gap-5 mt-5">
-    <!-- BEGIN: Chat Side Menu -->
-    <div class="col-span-12 xl:col-span-4 2xl:col-span-3">
-      <div class="box intro-y">
-        <div class="pb-5 px-5 mt-5">
-          <div class="relative">
-            <input
-              type="text"
-              class="form-control py-3 px-4 pl-10"
-              placeholder="Search for messages or users..."
-            />
-            <SearchIcon
-              class="
-                w-5
-                h-5
-                absolute
-                inset-y-0
-                left-0
-                my-auto
-                text-slate-400
-                ml-3
-              "
-            />
-          </div>
-        </div>
-        <div class="h-[642px] overflow-y-auto scrollbar-hidden">
-          <div
-            v-for="(faker, fakerKey) in $_.take($f(), 7)"
-            :key="fakerKey"
-            class="
-              cursor-pointer
-              flex
-              items-start
-              border-b border-t border-slate-200/60
-              dark:border-darkmode-400
-              hover:bg-slate-50
-              dark:hover:bg-darkmode-400/50
-              py-5
-              px-5
-              -mb-px
-              last:border-b-0
-            "
-            :class="{
-              'z-10 relative bg-slate-100/80 dark:bg-darkmode-400 hover:bg-slate-100/80 dark:hover:bg-darkmode-400':
-                fakerKey == 1,
-            }"
-          >
-            <div class="w-12 h-12 flex-none image-fit mr-1">
-              <img
-                alt="Rocketman - HTML Admin Template"
-                class="rounded-full"
-                :src="faker.photos[0]"
-              />
-              <div
-                v-if="faker.trueFalse[0]"
-                class="
-                  w-3
-                  h-3
-                  bg-success
-                  absolute
-                  right-0
-                  bottom-0
-                  rounded-full
-                  border-2 border-white
-                  dark:border-darkmode-600
-                "
-              ></div>
-            </div>
-            <div class="ml-2 overflow-hidden flex-1">
-              <div class="flex items-center">
-                <a href="javascript:;" class="font-medium">{{
-                  faker.users[0].name
-                }}</a>
-                <div class="text-xs text-slate-500 ml-auto">
-                  {{ faker.times[0] }}
-                </div>
-              </div>
-              <div class="w-full truncate text-xs text-slate-500 mt-0.5">
-                {{ faker.users[0].username }}
-              </div>
-              <div class="flex mt-2">
-                <div class="flex-1 mr-3 truncate">
-                  {{ faker.news[0].shortContent }}
-                </div>
-                <div
-                  v-if="faker.trueFalse[0]"
-                  class="
-                    w-5
-                    h-5
-                    flex
-                    items-center
-                    justify-center
-                    text-xs text-white
-                    rounded-full
-                    bg-primary
-                    font-medium
-                    -mt-1
-                  "
-                >
-                  {{ faker.notificationCount }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END: Chat Side Menu -->
     <!-- BEGIN: Chat Content -->
     <div class="col-span-12 xl:col-span-8 2xl:col-span-9">
       <div class="box intro-y">
@@ -130,17 +23,9 @@
             "
           >
             <div class="flex items-center">
-              <div
-                class="w-10 h-10 sm:w-12 sm:h-12 flex-none image-fit relative"
-              >
-                <img
-                  alt="Rocketman - HTML Admin Template"
-                  class="rounded-full"
-                  :src="$f()[0].photos[0]"
-                />
-              </div>
               <div class="ml-3 mr-auto">
                 <div class="flex items-center">
+                  <ArrowLeftIcon class="w-4 h-4 mr-4" />
                   <div class="font-medium text-base">
                     {{ $f()[0].users[0].name }}
                   </div>
@@ -164,32 +49,11 @@
                     Online
                   </div>
                 </div>
-                <div class="mt-0.5 text-slate-500 text-xs sm:text-sm">
-                  Project Manager
-                </div>
               </div>
             </div>
           </div>
           <div class="overflow-y-scroll scrollbar-hidden px-5 pt-5 flex-1">
             <div class="flex items-end float-left mb-10">
-              <div
-                class="
-                  w-10
-                  h-10
-                  hidden
-                  sm:block
-                  flex-none
-                  image-fit
-                  relative
-                  mr-5
-                "
-              >
-                <img
-                  alt="Rocketman - HTML Admin Template"
-                  class="rounded-full"
-                  :src="$f()[0].photos[0]"
-                />
-              </div>
               <div class="-mb-6">
                 <div
                   class="
@@ -206,119 +70,14 @@
                 </div>
                 <div class="mt-2 text-xs text-slate-500">2 mins ago</div>
               </div>
-              <Dropdown class="hidden sm:block ml-3 my-auto">
-                <DropdownToggle
-                  tag="a"
-                  class="w-4 h-4 text-slate-500"
-                  href="javascript:;"
-                >
-                  <MoreVerticalIcon class="w-4 h-4" />
-                </DropdownToggle>
-                <DropdownMenu class="w-40">
-                  <DropdownContent>
-                    <DropdownItem
-                      ><CornerUpLeftIcon class="w-4 h-4 mr-2" />
-                      Reply</DropdownItem
-                    >
-                    <DropdownItem
-                      ><TrashIcon class="w-4 h-4 mr-2" /> Delete</DropdownItem
-                    >
-                  </DropdownContent>
-                </DropdownMenu>
-              </Dropdown>
             </div>
             <div class="clear-both"></div>
             <div class="flex items-end float-right mb-10">
-              <Dropdown class="hidden sm:block mr-3 my-auto">
-                <DropdownToggle
-                  tag="a"
-                  class="w-4 h-4 text-slate-500"
-                  href="javascript:;"
-                >
-                  <MoreVerticalIcon class="w-4 h-4" />
-                </DropdownToggle>
-                <DropdownMenu class="w-40">
-                  <DropdownContent>
-                    <DropdownItem
-                      ><CornerUpLeftIcon class="w-4 h-4 mr-2" />
-                      Reply</DropdownItem
-                    >
-                    <DropdownItem
-                      ><TrashIcon class="w-4 h-4 mr-2" /> Delete</DropdownItem
-                    >
-                  </DropdownContent>
-                </DropdownMenu>
-              </Dropdown>
               <div class="-mb-6">
                 <div class="bg-primary px-4 py-3 text-white rounded-md">
                   Lorem ipsum sit amen dolor, lorem ipsum sit amen dolor
                 </div>
                 <div class="mt-2 text-xs text-slate-500">1 mins ago</div>
-              </div>
-              <div
-                class="
-                  w-10
-                  h-10
-                  hidden
-                  sm:block
-                  flex-none
-                  image-fit
-                  relative
-                  ml-5
-                "
-              >
-                <img
-                  alt="Rocketman - HTML Admin Template"
-                  class="rounded-full"
-                  :src="$f()[1].photos[0]"
-                />
-              </div>
-            </div>
-            <div class="clear-both"></div>
-            <div class="flex items-end float-right mb-10">
-              <Dropdown class="hidden sm:block mr-3 my-auto">
-                <DropdownToggle
-                  tag="a"
-                  class="w-4 h-4 text-slate-500"
-                  href="javascript:;"
-                >
-                  <MoreVerticalIcon class="w-4 h-4" />
-                </DropdownToggle>
-                <DropdownMenu class="w-40">
-                  <DropdownContent>
-                    <DropdownItem
-                      ><CornerUpLeftIcon class="w-4 h-4 mr-2" />
-                      Reply</DropdownItem
-                    >
-                    <DropdownItem
-                      ><TrashIcon class="w-4 h-4 mr-2" /> Delete</DropdownItem
-                    >
-                  </DropdownContent>
-                </DropdownMenu>
-              </Dropdown>
-              <div class="-mb-6">
-                <div class="bg-primary px-4 py-3 text-white rounded-md">
-                  Lorem ipsum sit amen dolor, lorem ipsum sit amen dolor
-                </div>
-                <div class="mt-2 text-xs text-slate-500">59 secs ago</div>
-              </div>
-              <div
-                class="
-                  w-10
-                  h-10
-                  hidden
-                  sm:block
-                  flex-none
-                  image-fit
-                  relative
-                  ml-5
-                "
-              >
-                <img
-                  alt="Rocketman - HTML Admin Template"
-                  class="rounded-full"
-                  :src="$f()[1].photos[0]"
-                />
               </div>
             </div>
             <div class="clear-both"></div>
@@ -334,24 +93,6 @@
               12 June 2020
             </div>
             <div class="flex items-end float-left mb-10">
-              <div
-                class="
-                  w-10
-                  h-10
-                  hidden
-                  sm:block
-                  flex-none
-                  image-fit
-                  relative
-                  mr-5
-                "
-              >
-                <img
-                  alt="Rocketman - HTML Admin Template"
-                  class="rounded-full"
-                  :src="$f()[0].photos[0]"
-                />
-              </div>
               <div class="-mb-6">
                 <div
                   class="
@@ -367,112 +108,14 @@
                 </div>
                 <div class="mt-2 text-xs text-slate-500">10 secs ago</div>
               </div>
-              <Dropdown class="hidden sm:block ml-3 my-auto">
-                <DropdownToggle
-                  tag="a"
-                  class="w-4 h-4 text-slate-500"
-                  href="javascript:;"
-                >
-                  <MoreVerticalIcon class="w-4 h-4" />
-                </DropdownToggle>
-                <DropdownMenu class="w-40">
-                  <DropdownContent>
-                    <DropdownItem
-                      ><CornerUpLeftIcon class="w-4 h-4 mr-2" />
-                      Reply</DropdownItem
-                    >
-                    <DropdownItem
-                      ><TrashIcon class="w-4 h-4 mr-2" /> Delete</DropdownItem
-                    >
-                  </DropdownContent>
-                </DropdownMenu>
-              </Dropdown>
             </div>
             <div class="clear-both"></div>
             <div class="flex items-end float-right mb-10">
-              <Dropdown class="hidden sm:block mr-3 my-auto">
-                <DropdownToggle
-                  tag="a"
-                  class="w-4 h-4 text-slate-500"
-                  href="javascript:;"
-                >
-                  <MoreVerticalIcon class="w-4 h-4" />
-                </DropdownToggle>
-                <DropdownMenu class="w-40">
-                  <DropdownContent>
-                    <DropdownItem
-                      ><CornerUpLeftIcon class="w-4 h-4 mr-2" />
-                      Reply</DropdownItem
-                    >
-                    <DropdownItem
-                      ><TrashIcon class="w-4 h-4 mr-2" /> Delete</DropdownItem
-                    >
-                  </DropdownContent>
-                </DropdownMenu>
-              </Dropdown>
               <div class="-mb-6">
                 <div class="bg-primary px-4 py-3 text-white rounded-md">
                   Lorem ipsum
                 </div>
                 <div class="mt-2 text-xs text-slate-500">1 secs ago</div>
-              </div>
-              <div
-                class="
-                  w-10
-                  h-10
-                  hidden
-                  sm:block
-                  flex-none
-                  image-fit
-                  relative
-                  ml-5
-                "
-              >
-                <img
-                  alt="Rocketman - HTML Admin Template"
-                  class="rounded-full"
-                  :src="$f()[1].photos[0]"
-                />
-              </div>
-            </div>
-            <div class="clear-both"></div>
-            <div class="flex items-end float-left mb-10">
-              <div
-                class="
-                  w-10
-                  h-10
-                  hidden
-                  sm:block
-                  flex-none
-                  image-fit
-                  relative
-                  mr-5
-                "
-              >
-                <img
-                  alt="Rocketman - HTML Admin Template"
-                  class="rounded-full"
-                  :src="$f()[0].photos[0]"
-                />
-              </div>
-              <div class="-mb-6">
-                <div
-                  class="
-                    bg-slate-100
-                    dark:bg-darkmode-400
-                    px-4
-                    py-3
-                    text-slate-500
-                    rounded-md
-                  "
-                >
-                  {{ $f()[0].users[0].name }} is typing
-                  <span class="typing-dots ml-1">
-                    <span>.</span>
-                    <span>.</span>
-                    <span>.</span>
-                  </span>
-                </div>
               </div>
             </div>
           </div>
@@ -527,7 +170,7 @@
                   sm:mr-5
                 "
               >
-                <PaperclipIcon class="w-full h-full" />
+                <!-- <PaperclipIcon class="w-full h-full" /> -->
                 <input
                   type="file"
                   class="w-full h-full top-0 left-0 absolute opacity-0"
@@ -558,5 +201,84 @@
       </div>
     </div>
     <!-- END: Chat Content -->
+
+    <!-- BEGIN: Chat Side Menu -->
+    <div class="col-span-12 xl:col-span-4 2xl:col-span-3">
+      <div class="box p-5 cursor-pointer mt-5 first:mt-0">
+        <div class="flex items-center">
+          <div class="w-2 h-2 bg-warning rounded-full mr-3"></div>
+          <div class="event__title font-medium truncate">Issue information</div>
+          <InfoIcon class="w-4 h-4 text-slate-500 ml-auto" />
+        </div>
+        <div
+          class="
+            border-b border-t border-slate-200/60
+            dark:border-darkmode-400
+            py-5
+            my-5
+          "
+        >
+          <div class="flex items-center">
+            <TypeIcon class="w-4 h-4 text-slate-500 mr-2" />
+            title
+          </div>
+          <div class="flex items-center">
+            <TypeIcon class="w-4 h-4 text-slate-500 mr-2" />
+            Describe
+          </div>
+          <div class="flex items-center">
+            <UserIcon class="w-4 h-4 text-slate-500 mr-2" />
+            Requestor
+          </div>
+          <div class="flex items-center">
+            <UserIcon class="w-4 h-4 text-slate-500 mr-2" />
+            supporter
+          </div>
+          <div class="flex items-center">
+            <CalendarIcon class="w-4 h-4 text-slate-500 mr-2" />
+            02 February 2022
+          </div>
+        </div>
+        <div class="flex">
+          <button class="btn btn-outline-success py-1 px-2 ml-auto">
+            <CheckIcon class="w-4 h-4 mr-2" /> Close issue
+          </button>
+          <button class="btn btn-outline-warning py-1 px-2 ml-auto">
+            <ArchiveIcon class="w-4 h-4 mr-2" /> Hold issue
+          </button>
+        </div>
+      </div>
+
+      <div class="intro-x flex items-center h-10 mt-4">
+        <h2 class="text-lg font-medium truncate mr-5">Status Timeline</h2>
+      </div>
+      <div class="mt-4">
+        <div
+          v-for="(faker, fakerKey) in $_.take($f(), 4)"
+          :key="fakerKey"
+          class="intro-x"
+        >
+          <div class="box px-5 py-3 flex items-center zoom-in mb-3">
+            <div class="mr-auto">
+              <div class="font-medium">
+                {{ faker.users[0].name }}
+              </div>
+              <div class="text-slate-500 text-xs mt-1">
+                {{ faker.dates[0] }}
+              </div>
+            </div>
+            <div
+              :class="{
+                'text-success': faker.trueFalse[0],
+                'text-danger': !faker.trueFalse[0],
+              }"
+            >
+              {{ faker.trueFalse[0] ? "+" : "-" }}${{ faker.totals[0] }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END: Chat Side Menu -->
   </div>
 </template>
