@@ -114,17 +114,21 @@ class UserService {
         }
       })
     ))
-
+      
+    const newPassword = (userData.password) ? hashedPassword : findUser.password
+    console.log(newUserRole)
+    if(newUserRole){
+      userData["UserRole"] = {
+        createMany: {
+          data: newUserRole,
+        },
+      }
+    }
     const updateUserData: Promise<User> = this.users.update({
       where: { id: userId },
       data: {
         ...userData,
-        password: (userData.password) ? hashedPassword : findUser.password,
-        UserRole: {
-          createMany: {
-            data: newUserRole,
-          },
-        },
+        password: newPassword,
       },
     });
     return updateUserData;

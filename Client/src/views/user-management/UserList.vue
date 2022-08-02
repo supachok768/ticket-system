@@ -1,5 +1,5 @@
 <template>
-  <h2 class="intro-y text-lg font-medium mt-10">Data List Layout</h2>
+  <h2 class="intro-y text-lg font-medium mt-10">Users</h2>
   <div
     class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2"
   >

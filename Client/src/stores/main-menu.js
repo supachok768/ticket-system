@@ -16,15 +16,15 @@ export const useMainMenuStore = defineStore("mainMenu", {
         pageName: "user-list",
         title: "User",
       },
-      {
-        icon: "",
-        pageName: "user-detail",
-        params: {
-          mode: "edit",
-          id: 0,
-        },
-        title: "User Detail",
-      },
+      // {
+      //   icon: "",
+      //   pageName: "user-detail",
+      //   params: {
+      //     mode: "edit",
+      //     id: 0,
+      //   },
+      //   title: "User Detail",
+      // },
       "TICKET MANAGEMENT",
       {
         icon: "",

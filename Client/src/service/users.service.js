@@ -15,7 +15,7 @@ export default class UsersService {
             password: password,
             firstName: firstName,
             lastName: lastName,
-            rolesActive: rolesActiveListId
+            rolesActive: rolesActiveListId.map(x => parseInt(x))
         })
     }
     updateUser(id, email, password, firstName, lastName, rolesActiveListId) {
@@ -24,7 +24,7 @@ export default class UsersService {
             password: password,
             firstName: firstName,
             lastName: lastName,
-            rolesActive: rolesActiveListId
+            rolesActive: rolesActiveListId.map(x => parseInt(x))
         })
     }
 }

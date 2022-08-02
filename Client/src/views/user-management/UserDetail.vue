@@ -63,10 +63,9 @@
         <div class="mt-3">
           <label for="formType" class="form-label">Type</label>
           <TomSelect id="formType" v-model="form.type" class="w-full" multiple>
-            <option value="SuperAdmin">SuperAdmin</option>
-            <option value="TicketManager">TicketManager</option>
-            <option value="Client">Client</option>
-            <option value="Supporter">Supporter</option>
+            <option v-for="(item, key) in roles" :key="key" :value="item.id">
+              {{ item.name }}
+            </option>
           </TomSelect>
         </div>
         <div class="mt-3">
@@ -93,6 +92,7 @@
         </div>
       </div>
       {{ form }}
+      {{ roles }}
       <!-- END: Form Layout -->
     </div>
   </div>
@@ -100,10 +100,13 @@
 
 <script lang="ts">
 import UsersService from "../../service/users.service";
+import RolesService from "../../service/roles.service";
 export default {
   data() {
     return {
       userService: new UsersService(this.$axios),
+      rolesService: new RolesService(this.$axios),
+      roles: [],
       form: {
         firstName: "",
         lastName: "",
@@ -116,6 +119,7 @@ export default {
     };
   },
   mounted() {
+    this.getRoles();
     if (this.$route.params.mode == "new") {
       return;
     }
@@ -141,7 +145,59 @@ export default {
           alert(err.response.data.message);
         });
     },
-    onSave() {},
+    getRoles() {
+      this.rolesService
+        .getRoles()
+        .then((result) => {
+          this.roles = result.data.data;
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
+    },
+    onSave() {
+      if (this.form.password) {
+        if (this.form.password != this.formCfPassword) {
+          alert("password not match");
+          return;
+        }
+      }
+
+      if (this.$route.params.mode == "new") {
+        this.userService
+          .createUser(
+            this.form.email,
+            this.form.password,
+            this.form.firstName,
+            this.form.lastName,
+            this.form.type
+          )
+          .then((result) => {
+            this.onBackUserList();
+          })
+          .catch((err) => {
+            alert(err.response.data.message);
+          });
+      }
+
+      if (this.$route.params.mode == "edit") {
+        this.userService
+          .updateUser(
+            this.$route.params.id,
+            this.form.email,
+            this.form.password,
+            this.form.firstName,
+            this.form.lastName,
+            this.form.type
+          )
+          .then((result) => {
+            this.onBackUserList();
+          })
+          .catch((err) => {
+            alert(err.response.data.message);
+          });
+      }
+    },
     onBackUserList() {
       this.$router.push({
         name: "user-list",
