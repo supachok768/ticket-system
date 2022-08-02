@@ -87,9 +87,24 @@ class IssueService {
     }
 
     const Issue: Promise<Issue[]> = this.issue.findMany({
-      ...option,
-      orderBy: {
-        createAt: 'desc',
+      ...{
+        where: {
+          assignToId: userId,
+        },
+        include: {
+          AssignTo: true,
+          RequestFrom: true,
+          Ticket: true,
+          IssueStatusTransaction: {
+            include: { IssueStatus: true },
+            orderBy: {
+              createAt: 'desc',
+            },
+          },
+        },
+        orderBy: {
+          createAt: 'desc',
+        },
       },
     });
     return Issue;

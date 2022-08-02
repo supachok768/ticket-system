@@ -90,12 +90,15 @@
             <div
               class="flex items-center justify-center"
               :class="{
-                'text-success': item.isActive,
-                'text-danger': !item.isActive,
+                'text-success':
+                  item.IssueStatusTransaction[0].IssueStatus.name != 'Close',
+                'text-danger':
+                  item.IssueStatusTransaction[0].IssueStatus.name == 'Close',
               }"
             >
               <CheckSquareIcon class="w-4 h-4 mr-2" />
-              {{ item.isActive ? "Active" : "Inactive" }}
+              {{ item.IssueStatusTransaction[0].IssueStatus.name }}
+              <!-- {{ item.isActive ? "Active" : "Inactive" }} -->
             </div>
           </td>
           <td class="table-report__action w-56">

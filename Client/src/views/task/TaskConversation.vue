@@ -244,12 +244,21 @@
             {{ issueData.createAt }}
           </div>
         </div>
-        <div class="flex">
-          <button class="btn btn-outline-success py-1 px-2 ml-auto">
-            <CheckIcon class="w-4 h-4 mr-2" /> Close issue
+        <div class="flex" v-if="!isClosed">
+          <button
+            class="btn btn-outline-success py-1 px-2 ml-auto"
+            @click="setIssueStatus('Close')"
+          >
+            <CheckIcon class="w-4 h-4 mr-2" />
+            Close issue
           </button>
-          <button class="btn btn-outline-warning py-1 px-2 ml-auto">
-            <ArchiveIcon class="w-4 h-4 mr-2" /> Hold issue
+          <button
+            v-if="!isHold"
+            class="btn btn-outline-warning py-1 px-2 ml-auto"
+            @click="setIssueStatus('Hold')"
+          >
+            <ArchiveIcon class="w-4 h-4 mr-2" />
+            Hold issue
           </button>
         </div>
       </div>
@@ -284,11 +293,14 @@
 </template>
 
 <script lang="ts">
+import IssueStatusService from "../../service/issue_status.service";
 import IssueService from "../../service/issue.service";
 export default {
   data() {
     return {
       issueService: new IssueService(this.$axios),
+      issueStatusService: new IssueStatusService(this.$axios),
+      issueStatusList: [],
       issueData: undefined,
     };
   },
@@ -300,6 +312,7 @@ export default {
     }
 
     this.getIssue();
+    this.getIssueStatus();
   },
   methods: {
     getIssue() {
@@ -307,9 +320,44 @@ export default {
         .getIssueById(this.$route.params.id)
         .then((result) => {
           this.issueData = result.data.data;
-          console.log(result.data.data);
+          if (result.data.data.IssueStatusTransaction.length == 1) {
+            this.setIssueStatus("In Process");
+          }
         })
         .catch((e) => alert(e.response.data.message));
+    },
+    getIssueStatus() {
+      this.issueStatusService
+        .getIssueStatus()
+        .then((result) => {
+          this.issueStatusList = result.data.data;
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
+    setIssueStatus(status) {
+      const statusId = this.issueStatusList.find((x) => x.name == status).id;
+      this.issueService
+        .updateStatusIssue(this.$route.params.id, statusId)
+        .then((result) => {
+          this.getIssue();
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
+  },
+  computed: {
+    isHold() {
+      return (
+        this.issueData.IssueStatusTransaction.findIndex(
+          (x) => x.IssueStatus.name == "Hold"
+        ) > -1
+      );
+    },
+    isClosed() {
+      return (
+        this.issueData.IssueStatusTransaction.findIndex(
+          (x) => x.IssueStatus.name == "Close"
+        ) > -1
+      );
     },
   },
 };

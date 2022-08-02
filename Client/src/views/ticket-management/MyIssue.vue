@@ -1,5 +1,5 @@
 <template>
-  <h2 class="intro-y text-lg font-medium mt-10">Ticket List</h2>
+  <h2 class="intro-y text-lg font-medium mt-10">My issue</h2>
   <div
     class="intro-y col-span-12 flex flex-wrap sm:flex-nowrap items-center mt-2"
   >
@@ -96,12 +96,15 @@
             <div
               class="flex items-center justify-center"
               :class="{
-                'text-success': item.isActive,
-                'text-danger': !item.isActive,
+                'text-success':
+                  item.IssueStatusTransaction[0].IssueStatus.name != 'Close',
+                'text-danger':
+                  item.IssueStatusTransaction[0].IssueStatus.name == 'Close',
               }"
             >
               <CheckSquareIcon class="w-4 h-4 mr-2" />
-              {{ item.isActive ? "Active" : "Inactive" }}
+              {{ item.IssueStatusTransaction[0].IssueStatus.name }}
+              <!-- {{ item.isActive ? "Active" : "Inactive" }} -->
             </div>
           </td>
           <td class="table-report__action w-56">
