@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { Ticket, TicketUser } from '@prisma/client';
 import { BuyTicketDto, CreateTicketDto } from '@dtos/ticket.dto';
 import ticketService from '@services/tickets.service';
+import { RequestWithUser } from '@/interfaces/auth.interface';
 
 class TicketController {
   public ticketService = new ticketService();
@@ -38,10 +39,10 @@ class TicketController {
     }
   };
 
-  public buyTicket = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  public buyTicket = async (req: RequestWithUser, res: Response, next: NextFunction): Promise<void> => {
     try {
       let ticketData: BuyTicketDto = req.body;
-      const userId = Number(req.user['id']);
+      const userId = Number(req.user.id);
       ticketData.userId = userId;
       const createTicketUserData: TicketUser = await this.ticketService.buyTicket(ticketData);
 
