@@ -115,7 +115,6 @@
     <table class="table table-report -mt-2">
       <thead>
         <tr>
-          <th class="whitespace-nowrap">IMAGES</th>
           <th class="whitespace-nowrap">NAME</th>
           <th class="text-center whitespace-nowrap">TYPES</th>
           <th class="text-center whitespace-nowrap">STATUS</th>
@@ -128,19 +127,6 @@
           :key="fakerKey"
           class="intro-x"
         >
-          <td class="w-40">
-            <div class="flex justify-center">
-              <div class="w-10 h-10 image-fit zoom-in">
-                <Tippy
-                  tag="img"
-                  alt="Rocketman Tailwind HTML Admin Template"
-                  class="rounded-full"
-                  :src="faker.images[0]"
-                  :content="`Uploaded at ${faker.dates[0]}`"
-                />
-              </div>
-            </div>
-          </td>
           <td>
             <a href="" class="font-medium whitespace-nowrap">{{
               faker.products[0].name

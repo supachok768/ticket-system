@@ -45,11 +45,11 @@ export const useMainMenuStore = defineStore("mainMenu", {
         pageName: "my-ticket",
         title: "My Ticket",
       },
-      {
-        icon: "",
-        pageName: "ticket-buy",
-        title: "Buy Ticket",
-      },
+      // {
+      //   icon: "",
+      //   pageName: "ticket-buy",
+      //   title: "Buy Ticket",
+      // },
       {
         icon: "",
         pageName: "my-issue",

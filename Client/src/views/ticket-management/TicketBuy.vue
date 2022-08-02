@@ -103,6 +103,9 @@ export default {
         .buyTicket(item.id, item.name, item.buyAmount)
         .then((result) => {
           alert("Buy ticket success");
+          this.$router.push({
+            name: "my-ticket",
+          });
         })
         .catch((err) => {
           alert(err.response.data.message);
