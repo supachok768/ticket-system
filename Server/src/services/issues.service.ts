@@ -11,53 +11,57 @@ class IssueService {
   public ticket = new PrismaClient().ticket;
 
   public findIssue(perPage?: number, numPage?: number): Promise<Issue[]> {
-    let option = {
-      include: {
-        AssignTo: true,
-        RequestFrom: true,
-        Ticket: true,
-        IssueStatusTransaction: {
-          include: { IssueStatus: true },
-        },
-      },
-    };
+    // let option = ;
 
-    if (!Number.isNaN(perPage)) {
-      option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
-    }
+    // if (!Number.isNaN(perPage)) {
+    //   option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
+    // }
 
     const Issue: Promise<Issue[]> = this.issue.findMany({
-      ...option,
-      orderBy: {
-        createAt: 'desc',
-      },
+      ...{
+        include: {
+          AssignTo: true,
+          RequestFrom: true,
+          Ticket: true,
+          IssueStatusTransaction: {
+            include: { IssueStatus: true },
+            orderBy: {
+              createAt: 'desc',
+            }
+          },
+        },
+        orderBy: {
+          createAt: 'desc',
+        }
+      }
     });
     return Issue;
   }
 
   public findIssueRequest(userId: number, perPage?: number, numPage?: number): Promise<Issue[]> {
-    let option = {
-      where: {
-        requestFromId: userId,
-      },
-      include: {
-        AssignTo: true,
-        RequestFrom: true,
-        Ticket: true,
-        IssueStatusTransaction: {
-          include: { IssueStatus: true },
-        },
-      },
-    };
-
-    if (!Number.isNaN(perPage)) {
-      option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
-    }
+    // if (!Number.isNaN(perPage)) {
+    //   option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
+    // }
 
     const Issue: Promise<Issue[]> = this.issue.findMany({
-      ...option,
-      orderBy: {
-        createAt: 'desc',
+      ...{
+        where: {
+          requestFromId: userId,
+        },
+        include: {
+          AssignTo: true,
+          RequestFrom: true,
+          Ticket: true,
+          IssueStatusTransaction: {
+            include: { IssueStatus: true },
+            orderBy: {
+              createAt: 'desc',
+            }
+          },
+        },
+        orderBy: {
+          createAt: 'desc',
+        }
       },
     });
     return Issue;
@@ -93,7 +97,7 @@ class IssueService {
 
   public findIssueAssignToday(userId: number, perPage?: number, numPage?: number): Promise<Issue[]> {
     const date = new Date();
-    let option = {
+    const Issue: Promise<Issue[]> = this.issue.findMany({
       where: {
         assignToId: userId,
         createAt: {
@@ -106,16 +110,11 @@ class IssueService {
         Ticket: true,
         IssueStatusTransaction: {
           include: { IssueStatus: true },
+          orderBy: {
+            createAt: 'desc',
+          },
         },
       },
-    };
-
-    if (!Number.isNaN(perPage)) {
-      option = { ...option, ...{ skip: Number(perPage * (numPage - 1)), take: perPage } };
-    }
-
-    const Issue: Promise<Issue[]> = this.issue.findMany({
-      ...option,
       orderBy: {
         createAt: 'desc',
       },
