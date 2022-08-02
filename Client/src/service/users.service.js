@@ -7,10 +7,19 @@ export default class UsersService {
         return this.axios.get(`${this.basePath}`)
     }
     getUserById(id) {
-        return this.axios.get(`${this.basePath}/${id}`)
+        return this.axios.get(`${this.basePath}/${parseInt(id)}`)
     }
-    getCreateUser(email, password, firstName, lastName, rolesActiveListId) {
+    createUser(email, password, firstName, lastName, rolesActiveListId) {
         return this.axios.post(`${this.basePath}`, {
+            email: email,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            rolesActive: rolesActiveListId
+        })
+    }
+    updateUser(id, email, password, firstName, lastName, rolesActiveListId) {
+        return this.axios.put(`${this.basePath}/${parseInt(id)}`, {
             email: email,
             password: password,
             firstName: firstName,

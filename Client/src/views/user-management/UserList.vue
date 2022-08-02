@@ -111,7 +111,10 @@
   <!-- END: Filter -->
   <!-- <div class="grid grid-cols-12 gap-6 mt-5"> -->
   <!-- BEGIN: Data List -->
-  <div class="intro-y col-span-12 overflow-auto lg:overflow-visible">
+  <div
+    class="intro-y col-span-12 overflow-auto lg:overflow-visible"
+    v-if="dataList"
+  >
     <table class="table table-report -mt-2">
       <thead>
         <tr>
@@ -122,46 +125,44 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="(faker, fakerKey) in dataList"
-          :key="fakerKey"
-          class="intro-x"
-        >
+        <tr v-for="(item, key) in dataList" :key="key" class="intro-x">
           <td>
-            <a href="" class="font-medium whitespace-nowrap">{{
-              faker.products[0].name
-            }}</a>
-            <div class="text-slate-500 text-xs whitespace-nowrap mt-0.5">
-              {{ faker.products[0].category }}
-            </div>
+            {{ item.firstName }}
+            {{ item.lastName }}
           </td>
-          <td class="text-center">{{ faker.stocks[0] }}</td>
+          <td class="text-center">{{ item.roleString }}</td>
           <td class="w-40">
             <div
               class="flex items-center justify-center"
               :class="{
-                'text-success': faker.trueFalse[0],
-                'text-danger': !faker.trueFalse[0],
+                'text-success': item.isActive,
+                'text-danger': !item.isActive,
               }"
             >
               <CheckSquareIcon class="w-4 h-4 mr-2" />
-              {{ faker.trueFalse[0] ? "Active" : "Inactive" }}
+              {{ item.isActive ? "Active" : "Inactive" }}
             </div>
           </td>
           <td class="table-report__action w-56">
             <div class="flex justify-center items-center">
-              <a
+              <router-link
                 class="flex items-center mr-3"
-                href="javascript:;"
-                @click="onEdit(fakerKey)"
+                @click="onEdit(key)"
+                :to="{
+                  name: 'user-detail',
+                  params: {
+                    mode: 'edit',
+                    id: item.id,
+                  },
+                }"
               >
                 <CheckSquareIcon class="w-4 h-4 mr-1" />
                 Edit
-              </a>
+              </router-link>
               <a
                 class="flex items-center text-danger"
                 href="javascript:;"
-                @click="onDeleteConfirmOpen(fakerKey)"
+                @click="onDeleteConfirmOpen(key)"
               >
                 <Trash2Icon class="w-4 h-4 mr-1" /> Delete
               </a>
@@ -281,12 +282,14 @@
 
 
 <script lang="ts">
+import UsersService from "../../service/users.service";
 export default {
   data() {
     return {
+      userService: new UsersService(this.$axios),
       deleteConfirmationModal: false,
       currentSelectDeleteId: undefined,
-      dataList: this.$f(),
+      dataList: undefined,
       search: { name: "", type: [], status: "active" },
       pagination: {
         sltPerPage: 10,
@@ -295,19 +298,26 @@ export default {
       },
     };
   },
+  mounted() {
+    this.getUsers();
+  },
   methods: {
+    getUsers() {
+      this.userService
+        .getUsers()
+        .then((result) => {
+          this.dataList = result.data.data;
+          this.dataList.forEach((x) => {
+            x.roleString = x.UserRole.map(
+              (userRole) => userRole.Role.name
+            ).join(", ");
+          });
+        })
+        .catch((e) => alert(e.response.data.message));
+    },
     onDeleteConfirmOpen(id) {
       this.currentSelectDeleteId = id;
       this.deleteConfirmationModal = true;
-    },
-    onEdit(id) {
-      this.$router.push({
-        name: "user-detail",
-        params: {
-          mode: "edit",
-          id: id,
-        },
-      });
     },
     onNew() {
       this.$router.push({

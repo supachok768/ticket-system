@@ -83,7 +83,7 @@
           <button
             type="button"
             class="btn btn-outline-secondary w-24 mr-1"
-            @click="onCancel"
+            @click="onBackUserList"
           >
             Cancel
           </button>
@@ -92,15 +92,18 @@
           </button>
         </div>
       </div>
+      {{ form }}
       <!-- END: Form Layout -->
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import UsersService from "../../service/users.service";
 export default {
   data() {
     return {
+      userService: new UsersService(this.$axios),
       form: {
         firstName: "",
         lastName: "",
@@ -112,9 +115,34 @@ export default {
       },
     };
   },
+  mounted() {
+    if (this.$route.params.mode == "new") {
+      return;
+    }
+    if (isNaN(this.$route.params.id)) {
+      alert("parameter is not integers");
+      this.onBackUserList();
+      return;
+    }
+    this.getUser();
+  },
   methods: {
+    getUser() {
+      this.userService
+        .getUserById(this.$route.params.id)
+        .then((result) => {
+          this.form.firstName = result.data.data.firstName;
+          this.form.lastName = result.data.data.lastName;
+          this.form.email = result.data.data.email;
+          this.form.type = result.data.data.UserRole.map((eles) => eles.id);
+          this.form.isActive = result.data.data.isActive;
+        })
+        .catch((err) => {
+          alert(err.response.data.message);
+        });
+    },
     onSave() {},
-    onCancel() {
+    onBackUserList() {
       this.$router.push({
         name: "user-list",
       });
